@@ -1,3 +1,7 @@
+
+{% block homepage %} {% endblock %}
+
+{% block content %}
 <html>
 
 <head>
@@ -6,22 +10,50 @@
 
 <body>
 
-<div class="site-wrapper">
-    <div class="site-wrapper-inner">
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <h1>Step Odyssey</h1>
+            <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
+        </div>
+        <div>
+            <form  method="POST">
 
-       
-        <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
-        <h1>Step Odyssey</h1>
-
-        <p class="lead">Sup bros</p>
-        <!-- <img src="/step_img.jpeg" alt="Image of nature"> -->
-
+                <h2>Please login in</h2>
+                        <div class="row g-3 align-items-left">
+                            <div class="col-auto">
+                                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                            </div>
+            
+                            <div class="col-auto">
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+            
+                        <div class="row g-3 align-items-left">
+                            <div class="col-auto">
+                            <label for="inputPassword6" class="col-form-label">Password</label>
+                            </div>
+                            <div class="col-auto">
+                            <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                            </div>
+                            <div class="col-auto">
+                            </div>
+                            </div>
+                        </div>
+            
+                        <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Log in</button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<footer>
-    <p>Copyright agnedev 2024. All rights reserved.</p>
-</footer>
-
 </body>
 </html>
+{% endblock %}

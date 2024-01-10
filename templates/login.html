@@ -4,9 +4,37 @@
 <form  method="POST">
 
     <h2>Please login in</h2>
-  
-    <div>
-      <label for="email">Email Address</label>
+            <div class="row g-3 align-items-left">
+                <div class="col-auto">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                </div>
+
+                <div class="col-auto">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-left">
+                <div class="col-auto">
+                  <label for="inputPassword6" class="col-form-label">Password</label>
+                </div>
+                <div class="col-auto">
+                  <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                  </div>
+                </div>
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Remember me</label>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Log in</button>
+            </div>
+    </form>
+      <!-- <label for="email">Email Address</label>
       <input type="email"
              name="email"
              placeholder="Email Address"
@@ -19,13 +47,10 @@
       <input type="password"
              name="password"
              placeholder="Password"
-             required>
-    </div>
+             required> -->
+   
   
-    <button type="submit">Log In
-    </button>
   
-  </form>
   
   </body>
   

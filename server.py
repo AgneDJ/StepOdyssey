@@ -15,11 +15,11 @@ def homepage():
     return render_template("homepage.html")
 
 
-@app.route("/login")
-def loggin_in():
-    """View login form."""
+@app.route("/signin")
+def signing_up():
+    """View sign up form."""
 
-    return render_template("login.html")
+    return render_template("signin.html")
 
 
 if __name__ == "__main__":
