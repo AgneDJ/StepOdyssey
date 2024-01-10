@@ -1,6 +1,7 @@
 """Models for Step Odyssey app."""
 
 from datetime import datetime
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -25,8 +26,9 @@ class Friends(db.Model):
 
     __tablename__ = "friends"
 
-    user_id = db.Column(db.Integer, foreignkey=True)  # fromUser
-    friend_id = db.Column(db.Integer, foreignkey=True, )  # from User
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    friend_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     status_acceptance = db.Column(db.Boolean)
 
     def __repr__(self):
@@ -39,7 +41,7 @@ class Steps(db.Model):
     __tablename__ = "steps"
 
     steps_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, foreignkey=True)  # from user
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     daily_total = db.Column(db.Integer)
     date = db.Column(db.DateTime)
 
@@ -52,9 +54,9 @@ class ChatBox(db.Model):
 
     __tablename__ = "chat_box"
 
-    user1_id = db.Column(db.Integer, foreignkey=True)  # from user
-    user2_id = db.Column(db.Integer, foreignkey=True)  # from user
-    chat_box_id = db.Column(db.Integer, autoincrement=True)
+    chat_box_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user1_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    user2_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
 
     def __repr__(self):
         return f"<ChatBox user1={self.user1_id} user2={self.user2_id} chatbox={self.chat_box_id}>"
@@ -66,10 +68,10 @@ class Message(db.Model):
     __tablename__ = "message"
 
     message_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    chat_box_id = db.Column(db.Integer, foreignkey=True)  # from chatbox
+    chat_box_id = db.Column(db.Integer, db.ForeignKey("chat_box.chat_box_id"))
     date = db.Column(db.DateTime)
     message = db.Column(db.VARCHAR(256))
-    sender = db.Column(db.Integer, foreignkey=True)  # from user
+    sender = db.Column(db.Integer, db.ForeignKey("user.user_id"))
 
     def __repr__(self):
         return f"<Message message_id={self.message_id} chat_box_id={self.chat_box_id_id} date={self.date} message={self.message} sender={self.sender}>"
@@ -104,40 +106,39 @@ class Challenges(db.Model):
         return f"<Challenges challenge_id={self.challenge_id} title={self.title} duration={self.duration} total_to_compete={self.total_to_compete}>"
 
 
-class User_achievements(db.Model):
+class UserAchievements(db.Model):
     """A user/achievements data."""
 
     __tablename__ = "user_achievements"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, foreignkey=True)  # from user
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     achievements_id = db.Column(
-        db.Integer, foreignkey=True)  # from achievements
+        db.Integer, db.ForeignKey("achievements.achievements_id"))
     date = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f"<User_achievements id={self.id}
-        user_id={self.user_id} achievements_id={self.achievements_id} date={self.date}>"
+        return f"<UserAchievements id={self.id} user_id={self.user_id} achievements_id={self.achievements_id} date={self.date}>"
 
 
-class User_challenges(db.Model):
-    """A user data."""
+class UserChallenges(db.Model):
+    """A user/challenges data."""
 
     __tablename__ = "user_challenges"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, foreignkey=True)
-    challenge_id = db.Column(db.Integer, foreignkey=True)
-    start_time= db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    challenge_id = db.Column(
+        db.Integer, db.ForeignKey("challenges.challenge_id"))
+    start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     complete = db.Column(db.Boolean)
 
     def __repr__(self):
-        return f"<User_challenge id={self.id}  user_id={self.user_id} challenge_id={self.challenge_id}  start_time={self.star_time} end_time={self.end_time} complete={self.complete}>"
+        return f"<UserChallenge id={self.id}  user_id={self.user_id} challenge_id={self.challenge_id}  start_time={self.star_time} end_time={self.end_time} complete={self.complete}>"
 
 
 def connect_to_db(flask_app, db_uri="postgresql:///step_challenge", echo=True):
-    """Connects to database."""
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -150,5 +151,4 @@ def connect_to_db(flask_app, db_uri="postgresql:///step_challenge", echo=True):
 
 if __name__ == "__main__":
     from server import app
-
     connect_to_db(app)
