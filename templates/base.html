@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Step Odyssey</title>
+</head>
+
+<body>
+    <nav>
+        <div>
+            <div>
+               
+            </div>
+        </div>
+    </nav>
+
+    <div>
+
+    <!-- Show flashed messages -->
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+    <img src="/step_img.jpeg">
+   
+    {% block body %}
+        
+    {% endblock %}
+
+    </div>
+</body>
+</html>
