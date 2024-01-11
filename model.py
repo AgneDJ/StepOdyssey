@@ -173,7 +173,6 @@ def example_data():
     """Create some sample data."""
 
     User.query.delete()
-
     agne = User(user_name='Agne', user_email='fizikee@gmail.com',
                 user_password='Asdf1234')
     bagne = User(user_name='Bagne', user_email='fizikea@gmail.com',
@@ -184,6 +183,18 @@ def example_data():
                  user_password='Asdf1236')
 
     db.session.add_all([agne, bagne, cagne, dagne])
+    db.session.commit()
+
+    friend1 = Friends(user_id=agne.user_id,
+                      friend_id=bagne.user_id, status_acceptance=True)
+    friend2 = Friends(user_id=bagne.user_id,
+                      friend_id=cagne.user_id, status_acceptance=True)
+    friend3 = Friends(user_id=cagne.user_id,
+                      friend_id=dagne.user_id, status_acceptance=True)
+    friend4 = Friends(user_id=dagne.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+
+    db.session.add_all([friend1, friend2, friend3, friend4])
     db.session.commit()
 
 
