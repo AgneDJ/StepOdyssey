@@ -17,6 +17,8 @@ class User(db.Model):
     user_email = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
 
+    friends = db.relationship('Friends', back_populates="user")
+
     def __repr__(self):
         return f"<User user_id={self.user_id} name={self.user_name} email={self.user_email} password={self.user_password}>"
 
@@ -30,6 +32,8 @@ class Friends(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     friend_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     status_acceptance = db.Column(db.Boolean)
+
+    user = db.relationship('User', back_populates="friends")
 
     def __repr__(self):
         return f"<Friend user_id={self.user_id} friend_id={self.friend_id} status={self.status_acceptance}>"
@@ -45,6 +49,8 @@ class Steps(db.Model):
     daily_total = db.Column(db.Integer)
     date = db.Column(db.DateTime)
 
+    user = db.relationship('User', back_populates="steps")
+
     def __repr__(self):
         return f"<Steps steps_id={self.steps_id} user_id={self.user_id} daily_total={self.daily_total} date={self.date}>"
 
@@ -57,6 +63,8 @@ class ChatBox(db.Model):
     chat_box_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user1_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     user2_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+
+    user = db.relationship('User', back_populates="chat_box")
 
     def __repr__(self):
         return f"<ChatBox user1={self.user1_id} user2={self.user2_id} chatbox={self.chat_box_id}>"
@@ -73,6 +81,8 @@ class Message(db.Model):
     message = db.Column(db.VARCHAR(256))
     sender = db.Column(db.Integer, db.ForeignKey("user.user_id"))
 
+    chat_box = db.relationship('ChatBox', back_populates="message")
+
     def __repr__(self):
         return f"<Message message_id={self.message_id} chat_box_id={self.chat_box_id_id} date={self.date} message={self.message} sender={self.sender}>"
 
@@ -88,6 +98,9 @@ class Achievements(db.Model):
     condition = db.Column(db.Integer)
     title = db.Column(db.String)
 
+    user_achievements = db.relationship(
+        'UserAchievements', back_populates="achievements")
+
     def __repr__(self):
         return f"<Achievements achievements_id={self.achievements_id} image={self.image} condition={self.condition} title={self.title}>"
 
@@ -101,6 +114,9 @@ class Challenges(db.Model):
     title = db.Column(db.String)
     duration = db.Column(db.Integer)
     total_to_compete = db.Column(db.Integer)
+
+    user_challenges = db.relationship(
+        'UserChallenges', back_populates="challenges")
 
     def __repr__(self):
         return f"<Challenges challenge_id={self.challenge_id} title={self.title} duration={self.duration} total_to_compete={self.total_to_compete}>"
@@ -116,6 +132,11 @@ class UserAchievements(db.Model):
     achievements_id = db.Column(
         db.Integer, db.ForeignKey("achievements.achievements_id"))
     date = db.Column(db.DateTime)
+
+    user = db.relationship(
+        'User', back_populates="user_achievements")
+    achievements = db.relationship(
+        'Achievements', back_populates="user_achievements")
 
     def __repr__(self):
         return f"<UserAchievements id={self.id} user_id={self.user_id} achievements_id={self.achievements_id} date={self.date}>"
@@ -133,6 +154,11 @@ class UserChallenges(db.Model):
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
     complete = db.Column(db.Boolean)
+
+    user = db.relationship(
+        'User', back_populates="user_challenges")
+    challenges = db.relationship(
+        'Challenges', back_populates="user_challenges")
 
     def __repr__(self):
         return f"<UserChallenge id={self.id}  user_id={self.user_id} challenge_id={self.challenge_id}  start_time={self.star_time} end_time={self.end_time} complete={self.complete}>"

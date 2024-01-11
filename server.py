@@ -15,6 +15,14 @@ def homepage():
     return render_template("homepage.html")
 
 
+@app.route('/profile')
+def rendering_profile():
+    """Greet user."""
+    name = request.args.get('user_name')
+
+    return render_template("profile.html", name=name)
+
+
 @app.route("/signin")
 def signing_up():
     """View sign up form."""

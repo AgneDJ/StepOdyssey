@@ -12,13 +12,14 @@
 
     <div class="site-wrapper">
         <div class="site-wrapper-inner">
+            {% if session['RSVP'] %}
             <h1>Step Odyssey</h1>
             <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
         </div>
         <div>
-            <form  method="POST">
-
+             {% else %}
                 <h2>Please login in</h2>
+                    <form  action='/profile' method="POST">
                         <div class="row g-3 align-items-left">
                             <div class="col-auto">
                                 <label for="exampleInputEmail1" class="form-label">Email address</label>
@@ -52,6 +53,7 @@
                             <button type="submit" class="btn btn-primary">Register</button>
                         </div>
             </form>
+            {% endif %}
         </div>
     </div>
 </body>
