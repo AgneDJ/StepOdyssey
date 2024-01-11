@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route("/")
 def homepage():
     """View homepage."""
-
+    name = request.args.get('user_name')
     return render_template("homepage.html")
 
 
@@ -19,6 +19,8 @@ def homepage():
 def rendering_profile():
     """Greet user."""
     name = request.args.get('user_name')
+    if not name:
+        return redirect("/signin")
 
     return render_template("profile.html", name=name)
 

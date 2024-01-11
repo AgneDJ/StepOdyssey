@@ -10,14 +10,19 @@ db = SQLAlchemy()
 class User(db.Model):
     """A user data."""
 
-    __tablename__ = "user"
+    __tablename__ = "user_data"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_name = db.Column(db.String, nullable=False)
     user_email = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
 
-    friends = db.relationship('Friends', back_populates="user")
+    # friends = db.relationship('Friends', back_populates="user")
+    steps = db.relationship('Steps', back_populates="user")
+    user_achievements = db.relationship(
+        'UserAchievements', back_populates="user")
+    user_challenges = db.relationship(
+        'UserChallenges', back_populates="user")
 
     def __repr__(self):
         return f"<User user_id={self.user_id} name={self.user_name} email={self.user_email} password={self.user_password}>"
@@ -29,11 +34,11 @@ class Friends(db.Model):
     __tablename__ = "friends"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    friend_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+    friend_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
     status_acceptance = db.Column(db.Boolean)
 
-    user = db.relationship('User', back_populates="friends")
+    # user = db.relationship('User', back_populates="friends")
 
     def __repr__(self):
         return f"<Friend user_id={self.user_id} friend_id={self.friend_id} status={self.status_acceptance}>"
@@ -45,7 +50,7 @@ class Steps(db.Model):
     __tablename__ = "steps"
 
     steps_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
     daily_total = db.Column(db.Integer)
     date = db.Column(db.DateTime)
 
@@ -61,10 +66,10 @@ class ChatBox(db.Model):
     __tablename__ = "chat_box"
 
     chat_box_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user1_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    user2_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    user1_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+    user2_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
 
-    user = db.relationship('User', back_populates="chat_box")
+    messages = db.relationship('Message', back_populates="chat_box")
 
     def __repr__(self):
         return f"<ChatBox user1={self.user1_id} user2={self.user2_id} chatbox={self.chat_box_id}>"
@@ -79,9 +84,9 @@ class Message(db.Model):
     chat_box_id = db.Column(db.Integer, db.ForeignKey("chat_box.chat_box_id"))
     date = db.Column(db.DateTime)
     message = db.Column(db.VARCHAR(256))
-    sender = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    sender = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
 
-    chat_box = db.relationship('ChatBox', back_populates="message")
+    chat_box = db.relationship('ChatBox', back_populates="messages")
 
     def __repr__(self):
         return f"<Message message_id={self.message_id} chat_box_id={self.chat_box_id_id} date={self.date} message={self.message} sender={self.sender}>"
@@ -128,7 +133,7 @@ class UserAchievements(db.Model):
     __tablename__ = "user_achievements"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
     achievements_id = db.Column(
         db.Integer, db.ForeignKey("achievements.achievements_id"))
     date = db.Column(db.DateTime)
@@ -148,7 +153,7 @@ class UserChallenges(db.Model):
     __tablename__ = "user_challenges"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
     challenge_id = db.Column(
         db.Integer, db.ForeignKey("challenges.challenge_id"))
     start_time = db.Column(db.DateTime)
@@ -162,6 +167,24 @@ class UserChallenges(db.Model):
 
     def __repr__(self):
         return f"<UserChallenge id={self.id}  user_id={self.user_id} challenge_id={self.challenge_id}  start_time={self.star_time} end_time={self.end_time} complete={self.complete}>"
+
+
+def example_data():
+    """Create some sample data."""
+
+    User.query.delete()
+
+    agne = User(user_name='Agne', user_email='fizikee@gmail.com',
+                user_password='Asdf1234')
+    bagne = User(user_name='Bagne', user_email='fizikea@gmail.com',
+                 user_password='Asdf1235')
+    cagne = User(user_name='Cagne', user_email='fizikeu@gmail.com',
+                 user_password='Asdf1236')
+    dagne = User(user_name='Dagne', user_email='fizikei@gmail.com',
+                 user_password='Asdf1236')
+
+    db.session.add_all([agne, bagne, cagne, dagne])
+    db.session.commit()
 
 
 def connect_to_db(flask_app, db_uri="postgresql:///step_challenge", echo=True):
@@ -178,3 +201,7 @@ def connect_to_db(flask_app, db_uri="postgresql:///step_challenge", echo=True):
 if __name__ == "__main__":
     from server import app
     connect_to_db(app)
+
+    with app.app_context():
+        db.create_all()
+        example_data()

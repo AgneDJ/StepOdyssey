@@ -13,7 +13,7 @@ def create_user(name, email, password):
 
 def get_users():
     """Return all users."""
-
+    print(User.query.all())
     return User.query.all()
 
 
@@ -26,10 +26,15 @@ def get_user_by_id(user_id):
 def get_user_by_email(email):
     """Return a user by email."""
 
-    return User.query.filter(User.email == email).first()
+    return User.query.filter(User.email == "email").first()
 
 
-if __name__ == "__main__":
-    from server import app
+def get_user_by_password(password):
+    """Return a user by password."""
 
-    connect_to_db(app)
+    return User.query.filter(User.password == password).first()
+
+# if __name__ == "__main__":
+#     from server import app
+
+#     connect_to_db(app)
