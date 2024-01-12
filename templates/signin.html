@@ -1,0 +1,53 @@
+{% block signup%}sign up {% endblock %}
+
+{% block body %}
+<form  method="POST">
+    <h2>Please sign up</h2>
+        <div class="row g-3 align-items-left">
+            <div class="col-auto">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+            </div>
+
+            <div class="col-auto">
+                <input type="name">
+            </div>
+        </div>
+            <div class="row g-3 align-items-left">
+                <div class="col-auto">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                </div>
+
+                <div class="col-auto">
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-left">
+                <div class="col-auto">
+                    <label for="inputPassword6" class="col-form-label">Password</label>
+                </div>
+                <div class="col-auto">
+                    <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 align-items-left">
+                <div class="col-auto">
+                    <label for="inputPassword6" class="col-form-label">Repeat password</label>
+                </div>
+                <div class="col-auto">
+                    <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-auto">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+    </form>
+  </body>
+  
+{% endblock %} 
