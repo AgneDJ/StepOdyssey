@@ -12,21 +12,21 @@
 
     <div class="site-wrapper">
         <div class="site-wrapper-inner">
-            {% if session['RSVP'] %}
+            {% if "user_email" in session %}
             <h1>Step Odyssey</h1>
             <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
         </div>
         <div>
              {% else %}
                 <h2>Please login in</h2>
-                    <form  action='/profile' method="GET">
+                    <form  action='/login' method="POST">
                         <div class="row g-3 align-items-left">
                             <div class="col-auto">
                                 <label for="exampleInputEmail1" class="form-label">Email address</label>
                             </div>
             
                             <div class="col-auto">
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                             </div>
                         </div>
             
@@ -35,7 +35,7 @@
                             <label for="inputPassword6" class="col-form-label">Password</label>
                             </div>
                             <div class="col-auto">
-                            <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                            <input name="password" type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
                             </div>
                             <div class="col-auto">
                             </div>
@@ -49,10 +49,12 @@
                         <div class="col-auto">
                             <button type="submit" class="btn btn-primary">Log in</button>
                         </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Register</button>
-                        </div>
             </form>
+            <div class="col-auto">
+                <form action="/signup">
+                    <button type="submit" class="btn btn-primary" >Register</button>
+                </form>
+            </div>
             {% endif %}
         </div>
     </div>
