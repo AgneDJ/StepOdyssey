@@ -172,6 +172,8 @@ class UserChallenges(db.Model):
 def example_data():
     """Create some sample data."""
 
+    Steps.query.delete()
+    Friends.query.delete()
     User.query.delete()
     agne = User(user_name='Agne', user_email='fizikee@gmail.com',
                 user_password='Asdf1234')
@@ -195,6 +197,18 @@ def example_data():
                       friend_id=agne.user_id, status_acceptance=True)
 
     db.session.add_all([friend1, friend2, friend3, friend4])
+    db.session.commit()
+
+    steps1 = Steps(user_id=agne.user_id, daily_total=15000, date="2024-1-1"
+                   )
+    steps2 = Steps(user_id=bagne.user_id, daily_total=15800, date="2024-1-3"
+                   )
+    steps3 = Steps(user_id=cagne.user_id, daily_total=12000, date="2024-1-2"
+                   )
+    steps4 = Steps(user_id=dagne.user_id, daily_total=15060, date="2024-1-5"
+                   )
+
+    db.session.add_all([steps1, steps2, steps3, steps4])
     db.session.commit()
 
 
