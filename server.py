@@ -32,6 +32,27 @@ def signing_up():
     return render_template("signin.html")
 
 
+@app.route("/signin", methods=["POST"])
+def register_user():
+    """Create a new user."""
+
+    name = request.form.get("name")
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = crud.get_user_by_email(name)
+
+    if user:
+        flash("The user with this name already exists. Try again.")
+    else:
+        user = crud.create_user(name, email, password)
+        db.session.add(user)
+        db.session.commit()
+        flash("Great! Your account has been created! Please log in.")
+
+    return redirect("/")
+
+
 if __name__ == "__main__":
     connect_to_db(app)
     app.run(host="0.0.0.0", debug=True)

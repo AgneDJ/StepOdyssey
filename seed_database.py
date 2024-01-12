@@ -1,15 +1,25 @@
+import os
+import json
+from random import choice, randint
+from datetime import datetime
+import crud
+import server
 from model import User,  connect_to_db, db
-# from party import app
 
 
-def create_test_user(user_name, user_email, user_password):
-    """Create test/user into database."""
+os.system('dropdb step_challenge')
+os.system('createdb step_challenge')
 
-    user = User(user_name='user_name', user_email='user_email',
-                user_password='user_password')
 
-    db.session.add(user)
-    db.session.commit()
+def connect_to_db(flask_app, db_uri="postgresql:///step_challenge", echo=True):
+    flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+    flask_app.config["SQLALCHEMY_ECHO"] = echo
+    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db.app = flask_app
+    db.init_app(flask_app)
+
+    print("Connected to the db!")
 
 
 if __name__ == "__main__":
@@ -18,4 +28,4 @@ if __name__ == "__main__":
 
     with app.app_context():
         db.create_all()
-        create_test_user()
+        example_data()
