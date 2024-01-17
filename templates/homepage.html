@@ -15,6 +15,10 @@
             {% if "user_email" in session %}
             <h1>Step Odyssey</h1>
             <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
+
+            <form action="/login/google">
+                <button type="submit" class="btn btn-primary">Goog</button>
+            </form>
         </div>
         <div>
              {% else %}
@@ -52,7 +56,7 @@
             </form>
             <div class="col-auto">
                 <form action="/signup">
-                    <button type="submit" class="btn btn-primary" >Register</button>
+                    <button type="submit" class="btn btn-primary">Register</button>
                 </form>
             </div>
             {% endif %}

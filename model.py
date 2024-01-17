@@ -3,6 +3,8 @@
 from datetime import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import secrets
+
 
 db = SQLAlchemy()
 
@@ -16,6 +18,7 @@ class User(db.Model):
     user_name = db.Column(db.String, nullable=False)
     user_email = db.Column(db.String, nullable=False)
     user_password = db.Column(db.String, nullable=False)
+    refresh_token = db.Column(db.String)
 
     # friends = db.relationship('Friends', back_populates="user")
     steps = db.relationship('Steps', back_populates="user")
@@ -209,6 +212,41 @@ def example_data():
                    )
 
     db.session.add_all([steps1, steps2, steps3, steps4])
+    db.session.commit()
+
+    chat_box1 = ChatBox(user1_id=agne.user_id, user2_id=bagne.user_id, message="Hey there!"
+                        )
+    chat_box2 = ChatBox(user1_id=bagne.user_id, user2_id=cagne.user_id, message="Hey dude!"
+                        )
+    chat_box3 = ChatBox(user1_id=cagne.user_id, user2_id=dagne.user_id, message="Help me"
+                        )
+    chat_box4 = ChatBox(user1_id=dagne.user_id, user2_id=agne.user_id, message="pls join"
+                        )
+
+    db.session.add_all([chat_box1, chat_box2, chat_box3, chat_box4])
+    db.session.commit()
+
+    achievements1 = Achievements(image="/static/img/10k_achievement.jpeg", condition=10000, title="10k Hooray!!"
+                                 )
+    # achievements2 = Achievements(image=, condition=20000, title="20k Where Are You Heading?!"
+    #                     )
+    # achievements3 = Achievements(image=, condition=30000, title="30k Half way to Moon"
+    #                     )
+    # achievements4 = Achievements(image=, condition=40000, title="40k Now thats what I'm talking about!"
+    #                     )
+    # achievements5 = Achievements(image=, condition=50000, title="50k ..."
+    #                     )
+    # achievements6 = Achievements(image=, condition=60000, title="60k ,.,"
+    #                     )
+    # achievements7 = Achievements(image=, condition=70000, title="70k woooooow"
+    #                     )
+    # achievements8 = Achievements(image=, condition=80000, title="80k gosh!"
+
+    # achievements9 = Achievements(image=, condition=90000, title="90k you are doing it!!!!"
+
+    # achievements10 = Achievements(image=, condition=100000, title="100k The Impossible!"
+
+    db.session.add_all([achievements1])
     db.session.commit()
 
 
