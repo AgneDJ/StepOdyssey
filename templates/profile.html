@@ -5,9 +5,29 @@
 <html>
     <head>
         <title>Greeting</title>
+        <link rel="stylesheet" href="static/css/styles.css">
     </head>
+
     <body>
         Hi {{name}}! Welcome to Step Odyssey!
+
+        <form action="/profile">
+            <table>
+                <tr>
+                  <td>{{daily_total}}</td>
+                  <td></td>
+                </tr>
+              </table>
+
+              <table>
+                <tr>
+                    <td>{{challenges}}</td>
+                </tr>
+              
+              </table>
+
+            <button type="submit" class="btn btn-primary">Sync data</button>
+        </form>
     </body>
 </html>
 {% endblock %} 

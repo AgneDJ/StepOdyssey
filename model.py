@@ -52,15 +52,15 @@ class Steps(db.Model):
 
     __tablename__ = "steps"
 
-    steps_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    # steps_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
-    daily_total = db.Column(db.Integer)
-    date = db.Column(db.DateTime)
+    daily_total = db.Column(db.Integer, default=0)
+    date = db.Column(db.DateTime, primary_key=True)
 
     user = db.relationship('User', back_populates="steps")
 
     def __repr__(self):
-        return f"<Steps steps_id={self.steps_id} user_id={self.user_id} daily_total={self.daily_total} date={self.date}>"
+        return f"Todays total steps: {self.daily_total}"
 
 
 class ChatBox(db.Model):
@@ -75,7 +75,7 @@ class ChatBox(db.Model):
     messages = db.relationship('Message', back_populates="chat_box")
 
     def __repr__(self):
-        return f"<ChatBox user1={self.user1_id} user2={self.user2_id} chatbox={self.chat_box_id}>"
+        return f"<ChatBox user1={self.user1_id} user2={self.user2_id} messages={self.messages}>"
 
 
 class Message(db.Model):
@@ -86,7 +86,7 @@ class Message(db.Model):
     message_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     chat_box_id = db.Column(db.Integer, db.ForeignKey("chat_box.chat_box_id"))
     date = db.Column(db.DateTime)
-    message = db.Column(db.VARCHAR(256))
+    message = db.Column(db.Text)
     sender = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
 
     chat_box = db.relationship('ChatBox', back_populates="messages")
@@ -175,11 +175,14 @@ class UserChallenges(db.Model):
 def example_data():
     """Create some sample data."""
 
+    Achievements.query.delete()
+    ChatBox.query.delete()
     Steps.query.delete()
     Friends.query.delete()
     User.query.delete()
-    agne = User(user_name='Agne', user_email='fizikee@gmail.com',
-                user_password='Asdf1234')
+    db.session.commit()
+    gagne = User(user_name='gAgne', user_email='fizike@gmail.com',
+                 user_password='Asdf1234')
     bagne = User(user_name='Bagne', user_email='fizikea@gmail.com',
                  user_password='Asdf1235')
     cagne = User(user_name='Cagne', user_email='fizikeu@gmail.com',
@@ -187,22 +190,22 @@ def example_data():
     dagne = User(user_name='Dagne', user_email='fizikei@gmail.com',
                  user_password='Asdf1236')
 
-    db.session.add_all([agne, bagne, cagne, dagne])
+    db.session.add_all([gagne, bagne, cagne, dagne])
     db.session.commit()
 
-    friend1 = Friends(user_id=agne.user_id,
+    friend1 = Friends(user_id=gagne.user_id,
                       friend_id=bagne.user_id, status_acceptance=True)
     friend2 = Friends(user_id=bagne.user_id,
                       friend_id=cagne.user_id, status_acceptance=True)
     friend3 = Friends(user_id=cagne.user_id,
                       friend_id=dagne.user_id, status_acceptance=True)
     friend4 = Friends(user_id=dagne.user_id,
-                      friend_id=agne.user_id, status_acceptance=True)
+                      friend_id=gagne.user_id, status_acceptance=True)
 
     db.session.add_all([friend1, friend2, friend3, friend4])
     db.session.commit()
 
-    steps1 = Steps(user_id=agne.user_id, daily_total=15000, date="2024-1-1"
+    steps1 = Steps(user_id=gagne.user_id, daily_total=15000, date="2024-1-1"
                    )
     steps2 = Steps(user_id=bagne.user_id, daily_total=15800, date="2024-1-3"
                    )
@@ -214,14 +217,39 @@ def example_data():
     db.session.add_all([steps1, steps2, steps3, steps4])
     db.session.commit()
 
-    chat_box1 = ChatBox(user1_id=agne.user_id, user2_id=bagne.user_id, message="Hey there!"
-                        )
-    chat_box2 = ChatBox(user1_id=bagne.user_id, user2_id=cagne.user_id, message="Hey dude!"
-                        )
-    chat_box3 = ChatBox(user1_id=cagne.user_id, user2_id=dagne.user_id, message="Help me"
-                        )
-    chat_box4 = ChatBox(user1_id=dagne.user_id, user2_id=agne.user_id, message="pls join"
-                        )
+    challenge1 = Challenges(title="Hit 5k", duration=24, total_to_compete=5000)
+    challenge2 = Challenges(
+        title="Hit 10k", duration=24, total_to_compete=10000)
+    challenge3 = Challenges(
+        title="Hit 20k", duration=24, total_to_compete=20000)
+    challenge4 = Challenges(
+        title="Hit 30k", duration=24, total_to_compete=30000)
+    challenge5 = Challenges(
+        title="Hit 40k", duration=24, total_to_compete=40000)
+    challenge6 = Challenges(
+        title="Hit 50k", duration=24, total_to_compete=50000)
+    challenge7 = Challenges(
+        title="Hit 60k", duration=24, total_to_compete=60000)
+    challenge8 = Challenges(
+        title="Hit 70k", duration=24, total_to_compete=70000)
+    challenge9 = Challenges(
+        title="Hit 80k", duration=24, total_to_compete=80000)
+    challenge10 = Challenges(
+        title="Hit 90k", duration=24, total_to_compete=90000)
+    challenge11 = Challenges(
+        title="Hit 100k", duration=24, total_to_compete=100000)
+
+    db.session.add_all([challenge1, challenge2, challenge3, challenge4, challenge5,
+                       challenge6, challenge7, challenge8, challenge9, challenge10, challenge11])
+
+    chat_box1 = ChatBox(user1_id=gagne.user_id,
+                        user2_id=bagne.user_id,)
+    chat_box2 = ChatBox(user1_id=bagne.user_id,
+                        user2_id=cagne.user_id)
+    chat_box3 = ChatBox(user1_id=cagne.user_id,
+                        user2_id=dagne.user_id)
+    chat_box4 = ChatBox(user1_id=dagne.user_id,
+                        user2_id=gagne.user_id)
 
     db.session.add_all([chat_box1, chat_box2, chat_box3, chat_box4])
     db.session.commit()

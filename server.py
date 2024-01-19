@@ -7,7 +7,7 @@ import requests
 import os
 import json
 import crud
-import time
+from datetime import time, date, datetime
 
 from jinja2 import StrictUndefined
 
@@ -47,8 +47,10 @@ def rendering_profile():
     if not user:
         del session["user_email"]
         return redirect("/")
+    daily_total = user.steps
+    challenges = crud.get_challenges()
 
-    return render_template("profile.html", name=user.user_name)
+    return render_template("profile.html", name=user.user_name, daily_total=daily_total, challenges=challenges)
 
 
 @app.route("/signup")
@@ -63,6 +65,7 @@ def register_user():
     name = request.form.get("name")
     email = request.form.get("email")
     password = request.form.get("password")
+    print('ddddddddddd'+name)
 
     user = crud.get_user_by_email(email)
 
@@ -140,26 +143,32 @@ def login_oauth():
         data=body,
         auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
     )
-
+    print("DATS DA TOUKEN:---------------------------------->")
     refresh_token = token_response.json()["refresh_token"]
 
-    # Parse the tokens!
-    print(token_response.json())
-    # NOTE: use this to register user without password if you want
-    # TODO: create/register user here
-    client.parse_request_body_response(json.dumps(token_response.json()))
-    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
-    uri, headers, body = client.add_token(userinfo_endpoint)
-    userinfo_response = requests.get(uri, headers=headers, data=body)
-    # TODO: store refresh token
+    user = crud.get_user_by_email(session['user_email'])
+    user.refresh_token = refresh_token
+    db.session.add(user)
+    db.session.commit()
 
-    # TODO: function to get users access token from refresh token
-    print("FITNESS")
-    print(fetch_steps(token_response.json()['access_token']))
-
-    # TODO: initial step count read/write (sync now button)
+    update_steps(user.user_id)
 
     return redirect("/profile")
+
+
+def getting_access_token(refresh_token):
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+    # Preparing and sending a request to get tokens
+    token_url, headers, body = client.prepare_refresh_token_request(
+        token_endpoint, refresh_token)
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+    )
+    return token_response.json()["access_token"]
 
 
 class FitnessRequest:
@@ -170,42 +179,60 @@ class FitnessRequest:
                 "dataSourceId": "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps"
             }],
             "bucketByTime": {"durationMillis": bucket},
-            "startTimeMillis": start*1000,
-            "endTimeMillis": end*1000
+            "startTimeMillis": int(start*1000),
+            "endTimeMillis": int(end*1000)
         }
 
     def to_body(self):
         return json.dumps(self.data)
 
 
+@app.route("/sync")
+def sync():
+    # ar yra useris
+    # ar prijungtas
+    update_steps()
+
+    return redirect("/profile")
+
+
 def fetch_steps(token):
+    today = date.today()
+    today = date(today.year, today.month, today.day-1)
+    start_time = datetime.combine(
+        today, datetime.min.time()).timestamp()
+    end_time = datetime.combine(
+        today, datetime.max.time()).timestamp()
     # TODO:  put in fitnessrequest calculation to start day from specific day (and end)
-    req = FitnessRequest(int(time.time())-24*60*60, int(time.time()))
+    req = FitnessRequest(start_time, end_time)
     headers = {
         "Content-Type": "application/json;encoding=utf-8",
         "Authorization": "Bearer " + token,
     }
     print(req.to_body())
     #  Sample outputL {'bucket': [{'startTimeMillis': '1705384320000', 'endTimeMillis': '1705387920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': [{'startTimeNanos': '1705384320000000000', 'endTimeNanos': '1705386154881356800', 'dataTypeName': 'com.google.step_count.delta', 'originDataSourceId': 'derived:com.google.step_count.delta:com.google.ios.fit:appleinc.:watch:860ab664:top_level', 'value': [{'intVal': 89, 'mapVal': []}]}]}]}, {'startTimeMillis': '1705387920000', 'endTimeMillis': '1705391520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705391520000', 'endTimeMillis': '1705395120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705395120000', 'endTimeMillis': '1705398720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705398720000', 'endTimeMillis': '1705402320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705402320000', 'endTimeMillis': '1705405920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705405920000', 'endTimeMillis': '1705409520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705409520000', 'endTimeMillis': '1705413120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705413120000', 'endTimeMillis': '1705416720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705416720000', 'endTimeMillis': '1705420320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705420320000', 'endTimeMillis': '1705423920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705423920000', 'endTimeMillis': '1705427520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705427520000', 'endTimeMillis': '1705431120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705431120000', 'endTimeMillis': '1705434720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705434720000', 'endTimeMillis': '1705438320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705438320000', 'endTimeMillis': '1705441920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705441920000', 'endTimeMillis': '1705445520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705445520000', 'endTimeMillis': '1705449120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705449120000', 'endTimeMillis': '1705452720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705452720000', 'endTimeMillis': '1705456320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705456320000', 'endTimeMillis': '1705459920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705459920000', 'endTimeMillis': '1705463520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705463520000', 'endTimeMillis': '1705467120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705467120000', 'endTimeMillis': '1705470720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}]}
-    return requests.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", headers=headers, data=req.to_body()).json()
+    return requests.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", headers=headers, data=req.to_body()).json(), today
     # TODO: write steps to db
 
 
+def update_steps(user_id):
+    user = crud.get_user_by_id(user_id)
+    access_token = getting_access_token(user.refresh_token)
+    whole_data_pack, today = fetch_steps(access_token)
+    print("------------------------------", whole_data_pack)
+    daily_total = 0
+    print(whole_data_pack)
+    for element in whole_data_pack['bucket']:  # bucket
+        for every_el in element['dataset']:  # start;end;dataset
+            for el in every_el['point']:  # datasr,points
+                for e in el['value']:
+                    daily_total += e['intVal']
+    steps = crud.create_steps(
+        user_id=user.user_id, daily_total=daily_total, date=today)
+    db.session.merge(steps)
+    db.session.commit()
+
+
 if __name__ == "__main__":
-    # TODO:
-    # google_provider_cfg = get_google_provider_cfg()
-    # token_endpoint = google_provider_cfg["token_endpoint"]
-
-    # # Prepare and send a request to get tokens! Yay tokens!
-    # token_url, headers, body = client.prepare_refresh_token_request(
-    #     token_endpoint, 'token')
-    # token_response = requests.post(
-    #     token_url,
-    #     headers=headers,
-    #     data=body,
-    #     auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
-    # )
-    # print(token_response.json())
-
     connect_to_db(app)
     app.run(host="0.0.0.0", debug=True, ssl_context="adhoc")
