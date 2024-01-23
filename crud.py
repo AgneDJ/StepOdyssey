@@ -45,9 +45,21 @@ def get_user_by_password(password):
 
 def get_challenges():
     """Return all challenges by title."""
+
     challenges = [challenges.title for challenges in Challenges.query.all()]
 
     return challenges
+
+
+def get_achievements():
+    """Return all achievements by title."""
+
+    achievements = [
+        achievements.title for achievements in Achievements.query.all()]
+
+    return achievements
+
+
 # if __name__ == "__main__":
 #     from server import app
 

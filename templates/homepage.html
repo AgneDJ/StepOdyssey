@@ -1,67 +1,67 @@
 
-{% block homepage %} {% endblock %}
+{% extends 'base.html' %}
 
-{% block content %}
-<html>
+{% block content %}   
+        <div class="site-wrapper">
+            <div class="site-wrapper-inner">
+                {% if "user_email" in session %}
+                <h1>Step Odyssey</h1>
+                <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
 
-<head>
-    <title>Step Odyssey</title>
-</head>
-
-<body>
-
-    <div class="site-wrapper">
-        <div class="site-wrapper-inner">
-            {% if "user_email" in session %}
-            <h1>Step Odyssey</h1>
-            <img src="static/img/step_img.jpeg" alt="nature" width="500" height="600">
-
-            <form action="/login/google">
-                <button type="submit" class="btn btn-primary">Goog</button>
-            </form>
-        </div>
-        <div>
-             {% else %}
-                <h2>Please login in</h2>
-                    <form  action='/login' method="POST">
-                        <div class="row g-3 align-items-left">
-                            <div class="col-auto">
-                                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                            </div>
-            
-                            <div class="col-auto">
-                                <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                            </div>
-                        </div>
-            
-                        <div class="row g-3 align-items-left">
-                            <div class="col-auto">
-                            <label for="inputPassword6" class="col-form-label">Password</label>
-                            </div>
-                            <div class="col-auto">
-                            <input name="password" type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
-                            </div>
-                            <div class="col-auto">
-                            </div>
-                            </div>
-                        </div>
-            
-                        <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Remember me</label>
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Log in</button>
-                        </div>
-            </form>
-            <div class="col-auto">
-                <form action="/signup">
-                    <button type="submit" class="btn btn-primary">Register</button>
+                <form action="/login/google">
+                    <p>Access google</p>
+                    <button type="submit" class="btn btn-primary">Come in!</button>
                 </form>
+                <!-- <form action="/login">
+                    <button type="submit" class="btn btn-primary">Press here to login!</button>
+                </form> -->
             </div>
-            {% endif %}
+            <div>
+                {% else %}
+                    <h2>Please login in</h2>
+                        <form  action='/login' method="POST">
+                            <div class="row g-3 align-items-left">
+                                <div class="col-auto">
+                                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                </div>
+                
+                                <div class="col-auto">
+                                    <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                </div>
+                            </div>
+                
+                            <div class="row g-3 align-items-left">
+                                <div class="col-auto">
+                                <label for="inputPassword6" class="col-form-label">Password</label>
+                                </div>
+                                <div class="col-auto">
+                                <input name="password" type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+                                </div>
+                                <div class="col-auto">
+                                </div>
+                                </div>
+                            </div>
+                
+                            <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Log in</button>
+                                </div>
+                            </div>
+                </form>
+                <div class="col-auto">
+                    <form action="/signup">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                    <form action="/login/google">
+                        <p>Or maybe you want to connect with your google acc?</p>
+                        <button type="submit" class="btn btn-primary">Hell ya!</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
         </div>
-    </div>
-</body>
-</html>
+
 {% endblock %}

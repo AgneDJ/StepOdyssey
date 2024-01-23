@@ -1,33 +1,48 @@
-{% block profile%} user profile{% endblock %}
 
-{% block body %}
+{% extends 'base.html' %}
+
+{% block content %}
 <!doctype html>
 <html>
     <head>
         <title>Greeting</title>
         <link rel="stylesheet" href="static/css/styles.css">
-    </head>
+     
+    
 
     <body>
+     
         Hi {{name}}! Welcome to Step Odyssey!
-
+      
         <form action="/profile">
-            <table>
-                <tr>
-                  <td>{{daily_total}}</td>
-                  <td></td>
-                </tr>
-              </table>
+            
+        <button type="submit" class="btn btn-primary">Sync data</button>
+        <div class="container">
 
-              <table>
-                <tr>
-                    <td>{{challenges}}</td>
-                </tr>
-              
-              </table>
+            <div class="row">
+                <div class="col-sm-4">User</div>
+                <div class="col-sm-4">Date</div>
+                <div class="col-sm-4">Daily Total Steps</div>
+              </div>
+              <div class="row">
+                <div class="col-sm">{{name}}</div>
+                <div class="col-sm">{{date}}</div>
+                <div class="col-sm">{{steps}}</div>
+              </div>
+            </div>
+        </div>
+        <div class="container">
 
-            <button type="submit" class="btn btn-primary">Sync data</button>
-        </form>
+            <div class="row">
+                <div class="col-sm-6">Challenges in progress</div>
+                <div class="col-sm-6">Achievements received</div>
+              </div>
+              <div class="row">
+                <div class="col-sm"></div>
+                <div class="col-sm"></div>
+              </div>
+            </div>
+        </div>
     </body>
 </html>
 {% endblock %} 

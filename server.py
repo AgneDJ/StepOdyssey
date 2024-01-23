@@ -48,9 +48,20 @@ def rendering_profile():
         del session["user_email"]
         return redirect("/")
     daily_total = user.steps
-    challenges = crud.get_challenges()
+    date = daily_total[0]
+    steps = daily_total[1]
 
-    return render_template("profile.html", name=user.user_name, daily_total=daily_total, challenges=challenges)
+    challenges = crud.get_challenges()
+    achievements = crud.get_achievements()
+
+    return render_template("profile.html", name=user.user_name, date=date, steps=steps, challenges=challenges, achievements=achievements)
+
+
+@app.route("/profile")
+def profile():
+    """View user profile."""
+    # name = request.args.get('user_name')
+    return render_template("profile.html")
 
 
 @app.route("/signup")
@@ -185,6 +196,35 @@ class FitnessRequest:
 
     def to_body(self):
         return json.dumps(self.data)
+
+
+@app.route("/friends")
+def friends():
+    """View friends list."""
+
+    return render_template("friends.html")
+
+
+@app.route("/challenges")
+def challenges():
+    """View challenges list."""
+    challenges = crud.get_challenges()
+
+    return render_template("challenges.html", challenges=challenges)
+
+
+@app.route("/leaderboard")
+def leaderboard():
+    """View leaderboard."""
+
+    return render_template("leaderboard.html")
+
+
+@app.route("/achievements")
+def achievements():
+    """View achievements."""
+    achievements = crud.get_achievements()
+    return render_template("achievements.html", achievements=achievements)
 
 
 @app.route("/sync")
