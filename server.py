@@ -9,6 +9,7 @@ import json
 import crud
 from datetime import time, date, datetime
 
+
 from jinja2 import StrictUndefined
 
 app = Flask(__name__)
@@ -48,13 +49,13 @@ def rendering_profile():
         del session["user_email"]
         return redirect("/")
     daily_total = user.steps
-    date = daily_total[0]
-    steps = daily_total[1]
 
-    challenges = crud.get_challenges()
-    achievements = crud.get_achievements()
+    user_challenges = crud.get_user_challenges()
+    user_achievements = crud.get_user_achievements()
+    print("gggggggggggggggggggggg", crud.get_leader())
+    # Example list
 
-    return render_template("profile.html", name=user.user_name, date=date, steps=steps, challenges=challenges, achievements=achievements)
+    return render_template("profile.html", name=user.user_name, date=date, steps=steps, user_challenges=user_challenges, user_achievements=user_achievements)
 
 
 @app.route("/profile")
