@@ -1,0 +1,23 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+        <div class="col-sm">
+            <table class="table table-dark">
+                <thead>
+                <tr>
+                    <th scope="col">Achievements list</th>
+                  
+                </tr>
+                </thead>
+                <tbody>
+                    {% for row in achievements %}
+                    <tr>
+                        <td><img src={{ row.image }}></td>
+                        <td>{{row.title}}</td>
+                    </tr>
+                    {% endfor %}    
+                </tbody>
+            </table>
+        </div>
+{% endblock %}
