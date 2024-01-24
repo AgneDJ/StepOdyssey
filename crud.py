@@ -5,6 +5,7 @@ from sqlalchemy import insert
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
 import os
+from datetime import date
 
 
 def create_user(name, email, password):
@@ -23,7 +24,6 @@ def create_steps(user_id, daily_total, date):
 
 def get_users():
     """Return all users."""
-    print(User.query.all())
     return User.query.all()
 
 
@@ -48,23 +48,28 @@ def get_user_by_password(password):
 def get_challenges():
     """Return all challenges by title."""
 
-    challenges = [challenges.title for challenges in Challenges.query.all()]
+    challenges = Challenges.query.all()
 
     return challenges
+
+
+def get_challenge_by_id(challenge_id):
+    challenge = Challenges.query.get(challenge_id)
+    return challenge
 
 
 def get_achievements():
     """Return all achievements by title."""
 
-    achievements = [
-        achievements.title for achievements in Achievements.query.all()]
+    achievements = Achievements.query.all()
     return achievements
 
 
-def get_user_challenges():
-    """Return user challenges by title."""
-    user_challenges = [
-        user_challenges.title for user_challenges in UserChallenges.query.all()]
+def add_data_to_user_challenges(user_id, challenge_id, start_time, end_time, complete):
+    """Adds challenge data to db"""
+    user_challenges = UserChallenges(user_id=user_id, challenge_id=challenge_id,
+                                     start_time=start_time, end_time=end_time, complete=complete)
+
     return user_challenges
 
 
@@ -78,10 +83,14 @@ def get_user_achievements():
 def get_leader():
     """Return most active users."""
 
-   # leader = User.query.filter(User.user_name, count(Steps.daily_total).join(Steps.daily_total, User.user_name ==
-    query = db.session.query(User.user_name, func.count(Steps.daily_total).label('daily_total')).join(
-        Steps.daily_total, User.user_name == Steps.daily_total).group_by(User.user_name).order_by(func.count(Steps.daily_total).desc()).limit(10)
-    return print(query)
+    today = date.today()
+    query = Steps.query.filter(Steps.date == today).order_by(
+        Steps.daily_total.desc()).limit(10).all()
+
+    # hmmmmmm NEED USER NAME
+
+    return query
+
 # if __name__ == "__main__":
 #     from server import app
 

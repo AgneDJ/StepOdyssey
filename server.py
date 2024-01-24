@@ -7,7 +7,9 @@ import requests
 import os
 import json
 import crud
-from datetime import time, date, datetime
+from datetime import time, date, datetime, timedelta
+import humanize
+import datetime as dt
 
 
 from jinja2 import StrictUndefined
@@ -48,14 +50,28 @@ def rendering_profile():
     if not user:
         del session["user_email"]
         return redirect("/")
-    daily_total = user.steps
 
-    user_challenges = crud.get_user_challenges()
+    date = None
+    daily_total = None
+    if len(user.steps) != 0:
+        date = user.steps[-1].date.date()
+        daily_total = user.steps[-1].daily_total
+
+    now = datetime.now()
+    user_challenges = []
+    print('ppppppppppppppppppp')
+    for challenge in user.user_challenges:
+        duration = now-challenge.end_time
+        user_challenges.append({
+            'user_challenge': challenge,
+            'duration': humanize.naturaltime(duration)
+        })
+
     user_achievements = crud.get_user_achievements()
-    print("gggggggggggggggggggggg", crud.get_leader())
+    # print("gggggggggggggggggggggg", crud.get_leader())  # for testing
     # Example list
 
-    return render_template("profile.html", name=user.user_name, date=date, steps=steps, user_challenges=user_challenges, user_achievements=user_achievements)
+    return render_template("profile.html", name=user.user_name, date=date, daily_total=daily_total, user_challenges=user_challenges, user_achievements=user_achievements)
 
 
 @app.route("/profile")
@@ -214,11 +230,43 @@ def challenges():
     return render_template("challenges.html", challenges=challenges)
 
 
+@app.route("/challenges", methods=["POST"])
+def join_challenges():
+
+    challenge_id = request.get_json()
+    print(challenge_id)
+    challenge_data = crud.get_challenge_by_id(challenge_id['id'])
+
+    challenge_data.title
+    challenge_data.duration
+    challenge_data.total_to_compete
+    start_time = datetime.now()
+    # challenge_id={self.challenge_id} title={self.title} duration={self.duration} total_to_compete={self.total_to_compete}
+    user = crud.get_user_by_email(session['user_email'])
+    if not user:
+        return "User not found", 400
+
+    user_challenge = crud.add_data_to_user_challenges(
+        user.user_id, challenge_data.challenge_id, start_time, start_time+timedelta(hours=challenge_data.duration), False)
+
+    db.session.add(user_challenge)
+    db.session.commit()
+    # add data to that table
+    resp = {
+        'status': 'hell yeah',
+        'title': challenge_data.title,
+        'start': str(start_time),
+        'duration': challenge_data.duration
+    }
+    return json.dumps(resp)
+
+
 @app.route("/leaderboard")
 def leaderboard():
     """View leaderboard."""
+    leaders = crud.get_leader()
 
-    return render_template("leaderboard.html")
+    return render_template("leaderboard.html", leaders=leaders)
 
 
 @app.route("/achievements")
@@ -232,14 +280,21 @@ def achievements():
 def sync():
     # ar yra useris
     # ar prijungtas
-    update_steps()
+    print("iiiiiiiiiiiiiiiiiiixxxxxxx")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return redirect("/")
+    print(update_steps(user.user_id))
 
     return redirect("/profile")
 
 
 def fetch_steps(token):
     today = date.today()
-    today = date(today.year, today.month, today.day-1)
+    today = date(today.year, today.month, today.day)
     start_time = datetime.combine(
         today, datetime.min.time()).timestamp()
     end_time = datetime.combine(
@@ -253,7 +308,6 @@ def fetch_steps(token):
     print(req.to_body())
     #  Sample outputL {'bucket': [{'startTimeMillis': '1705384320000', 'endTimeMillis': '1705387920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': [{'startTimeNanos': '1705384320000000000', 'endTimeNanos': '1705386154881356800', 'dataTypeName': 'com.google.step_count.delta', 'originDataSourceId': 'derived:com.google.step_count.delta:com.google.ios.fit:appleinc.:watch:860ab664:top_level', 'value': [{'intVal': 89, 'mapVal': []}]}]}]}, {'startTimeMillis': '1705387920000', 'endTimeMillis': '1705391520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705391520000', 'endTimeMillis': '1705395120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705395120000', 'endTimeMillis': '1705398720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705398720000', 'endTimeMillis': '1705402320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705402320000', 'endTimeMillis': '1705405920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705405920000', 'endTimeMillis': '1705409520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705409520000', 'endTimeMillis': '1705413120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705413120000', 'endTimeMillis': '1705416720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705416720000', 'endTimeMillis': '1705420320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705420320000', 'endTimeMillis': '1705423920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705423920000', 'endTimeMillis': '1705427520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705427520000', 'endTimeMillis': '1705431120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705431120000', 'endTimeMillis': '1705434720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705434720000', 'endTimeMillis': '1705438320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705438320000', 'endTimeMillis': '1705441920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705441920000', 'endTimeMillis': '1705445520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705445520000', 'endTimeMillis': '1705449120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705449120000', 'endTimeMillis': '1705452720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705452720000', 'endTimeMillis': '1705456320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705456320000', 'endTimeMillis': '1705459920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705459920000', 'endTimeMillis': '1705463520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705463520000', 'endTimeMillis': '1705467120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705467120000', 'endTimeMillis': '1705470720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}]}
     return requests.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", headers=headers, data=req.to_body()).json(), today
-    # TODO: write steps to db
 
 
 def update_steps(user_id):
@@ -265,7 +319,7 @@ def update_steps(user_id):
     print(whole_data_pack)
     for element in whole_data_pack['bucket']:  # bucket
         for every_el in element['dataset']:  # start;end;dataset
-            for el in every_el['point']:  # datasr,points
+            for el in every_el['point']:  # data,points
                 for e in el['value']:
                     daily_total += e['intVal']
     steps = crud.create_steps(

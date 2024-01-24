@@ -14,20 +14,20 @@
      
         Hi {{name}}! Welcome to Step Odyssey!
       
-        <form action="/profile">
-            
-        <button type="submit" class="btn btn-primary">Sync data</button>
+        <form action="/sync">
+            <button type="submit" class="btn btn-primary">Sync data</button>
+        </form>
         <div class="container">
 
             <div class="row">
                 <div class="col-sm-4">User</div>
-                <div class="col-sm-4">{{date}}</div>
+                <div class="col-sm-4"></div>
                 <div class="col-sm-4">Daily Total Steps</div>
               </div>
               <div class="row">
-                <div class="col-sm">{{name}}</div>
-                <div class="col-sm">{{steps}}</div>
                 <div class="col-sm"></div>
+                <div class="col-sm"></div>
+                <div class="col-sm">{{date}} - {{daily_total}}</div>
               </div>
             </div>
         </div>
@@ -42,16 +42,31 @@
             <div class="row">
                 <div class="col-sm-12">your achievements</div>
                 <div class="col-sm-12">{{user_achievements}}</div>
-                <div class="col-sm-12">{{user_achievements}}</div>
-                <div class="col-sm-12">{{user_achievements}}</div>
-                <div class="col-sm-12">{{user_achievements}}</div>
-              </div>
-              <div class="row">
-                <div class="col-sm-12">your challenges</div>
-                <div class="col-sm-12">{{user_challenges}}</div>
-                <div class="col-sm-12">{{user_challenges}}</div>
-                <div class="col-sm-12">{{user_challenges}}</div>
-                <div class="col-sm-12">{{user_challenges}}</div>
+            </div>
+              <div class="col-sm-12">your challenges</div>
+            <div class="row">
+                <div class="col-sm-2">Title</div>
+                <div class="col-sm-2">Duration</div>
+                <div class="col-sm-2">Goal</div>
+                <div class="col-sm-2">Time remaining</div>
+                <div class="col-sm-2">Status</div>
+             </div>
+                {% for row in user_challenges %}
+                <div class="row">
+                <div class="col-sm-2">{{row['user_challenge'].challenges.title}}</div>
+                <div class="col-sm-2">{{row['user_challenge'].challenges.duration}}</div>
+                <div class="col-sm-2">{{row['user_challenge'].challenges.total_to_compete}}</div>
+                <div class="col-sm-2">{{row['duration']}}</div>
+                <div class="col-sm-2">
+                    {% if not row['user_challenge'].complete %}
+                    <p>In progress</p>
+                    {% else %}
+                    <p>Completed</p>
+                    {% endif %} 
+                </div>
+                </div>
+
+                {% endfor %}
               </div>
             </div>
         </div>

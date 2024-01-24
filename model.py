@@ -60,7 +60,7 @@ class Steps(db.Model):
     user = db.relationship('User', back_populates="steps")
 
     def __repr__(self):
-        return f"{self.date}, {self.daily_total}"
+        return f"<Steps {self.user.user_name},{self.date}, {self.daily_total}>"
 
 
 class ChatBox(db.Model):
@@ -169,7 +169,7 @@ class UserChallenges(db.Model):
         'Challenges', back_populates="user_challenges")
 
     def __repr__(self):
-        return f"<UserChallenge id={self.id}  user_id={self.user_id} challenge_id={self.challenge_id}  start_time={self.star_time} end_time={self.end_time} complete={self.complete}>"
+        return f"<{self.id}, {self.user_id}, {self.challenge_id},  {self.start_time}, {self.end_time}, {self.complete}>"
 
 
 def example_data():
@@ -255,30 +255,30 @@ def example_data():
     db.session.commit()
 
     achievements1 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=5000, title="5k Nice! You are alive!!")
+        image="/static/img/10k_achievement.jpeg", condition=10000, title="10k Nice! You are alive!!")
 
     achievements2 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=10000, title="10k Hooray!!")
+        image="/static/img/10k_achievement.jpeg", condition=100000, title="100k Hooray!!")
     achievements3 = Achievements(image="/static/img/10k_achievement.jpeg",
-                                 condition=20000, title="20k Where Are You Heading?!")
-    achievements4 = Achievements(image="/static/img/10k_achievement.jpeg", condition=30000, title="30k Half way to Moon"
+                                 condition=200000, title="20k Where Are You Heading?!")
+    achievements4 = Achievements(image="/static/img/10k_achievement.jpeg", condition=300000, title="300k Half way to Moon"
                                  )
-    achievements5 = Achievements(image="/static/img/10k_achievement.jpeg", condition=40000, title="40k Now thats what I'm talking about!"
+    achievements5 = Achievements(image="/static/img/10k_achievement.jpeg", condition=400000, title="400k Now thats what I'm talking about!"
                                  )
-    achievements6 = Achievements(image="/static/img/10k_achievement.jpeg", condition=50000, title="50k ..."
+    achievements6 = Achievements(image="/static/img/10k_achievement.jpeg", condition=500000, title="500k ..."
                                  )
-    achievements7 = Achievements(image="/static/img/10k_achievement.jpeg", condition=60000, title="60k ,.,"
+    achievements7 = Achievements(image="/static/img/10k_achievement.jpeg", condition=600000, title="600k ,.,"
                                  )
-    achievements8 = Achievements(image="/static/img/10k_achievement.jpeg", condition=70000, title="70k woooooow"
+    achievements8 = Achievements(image="/static/img/10k_achievement.jpeg", condition=700000, title="700k woooooow"
                                  )
     achievements9 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=80000, title="80k gosh!")
+        image="/static/img/10k_achievement.jpeg", condition=800000, title="800k gosh!")
 
     achievements10 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=90000, title="90k you are doing it!!!!")
+        image="/static/img/10k_achievement.jpeg", condition=900000, title="900k you are doing it!!!!")
 
     achievements11 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=100000, title="100k The Impossible!")
+        image="/static/img/10k_achievement.jpeg", condition=1000000, title="The Impossible!")
 
     db.session.add_all([achievements1, achievements2, achievements3, achievements4, achievements5,
                        achievements6, achievements7, achievements8, achievements9, achievements10, achievements11])
