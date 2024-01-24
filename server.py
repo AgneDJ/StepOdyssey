@@ -67,11 +67,11 @@ def rendering_profile():
             'duration': humanize.naturaltime(duration)
         })
 
-    user_achievements = crud.get_user_achievements()
-    # print("gggggggggggggggggggggg", crud.get_leader())  # for testing
-    # Example list
+    lifetime_steps = crud.lifetime_steps(user.user_id)
 
-    return render_template("profile.html", name=user.user_name, date=date, daily_total=daily_total, user_challenges=user_challenges, user_achievements=user_achievements)
+    # user_achievements = crud.get_user_achievements()
+
+    return render_template("profile.html", name=user.user_name, date=date, daily_total=daily_total, user_challenges=user_challenges, lifetime_steps=lifetime_steps)
 
 
 @app.route("/profile")
@@ -141,7 +141,7 @@ def login_google():
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
         redirect_uri=request.host_url + "login/oauth",
-        scope=["openid", "email",
+        scope=["openid", "email", "https://www.googleapis.com/auth/userinfo.profile",
                "https://www.googleapis.com/auth/fitness.activity.read"],
         access_type="offline",
         include_granted_scopes="true",
@@ -174,7 +174,27 @@ def login_oauth():
     print("DATS DA TOUKEN:---------------------------------->")
     refresh_token = token_response.json()["refresh_token"]
 
-    user = crud.get_user_by_email(session['user_email'])
+    client.parse_request_body_response(json.dumps(token_response.json()))
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body).json()
+
+    print("lllllllllllll")
+    print(userinfo_response)
+    email = userinfo_response['email']
+    # user from db
+    # no user - register
+    # yes user - continue
+    # set session
+    user = crud.get_user_by_email(email)
+
+    if not user:
+        user = crud.create_user(userinfo_response['given_name'], email, "")
+        db.session.add(user)
+        db.session.commit()
+
+    session["user_email"] = user.user_email
+
     user.refresh_token = refresh_token
     db.session.add(user)
     db.session.commit()

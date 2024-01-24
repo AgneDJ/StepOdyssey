@@ -73,11 +73,19 @@ def add_data_to_user_challenges(user_id, challenge_id, start_time, end_time, com
     return user_challenges
 
 
-def get_user_achievements():
-    """Return user achievements by title."""
-    user_achievements = [
-        user_achievements.title for user_achievements in UserAchievements.query.all()]
-    return user_achievements
+def lifetime_steps(user_id):
+    """Returns total steps."""
+    user_lifetime_steps = db.session.query(
+        func.sum(Steps.daily_total)).filter(Steps.user_id == user_id).first()[0]
+    return user_lifetime_steps
+
+
+# def add_user_achievements(user_id, achievement_id, date, image):
+#     """Adds achievements data to db"""
+#     user_achievements = UserAchievements(user_id=user_id, achievement_id=achievement_id,
+#                                          date=date, image=image)
+
+#     return user_achievements
 
 
 def get_leader():
