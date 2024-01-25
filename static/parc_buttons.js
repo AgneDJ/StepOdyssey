@@ -23,6 +23,7 @@ const buttonPressed = (e) => {
     })
     .catch((err) => console.error(err));
 
+  // TODO: change after checking if response was ok
   console.log(id);
   if (e.target.innerText == "Participate") {
     e.target.innerText = "Joined";

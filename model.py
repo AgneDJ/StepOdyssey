@@ -78,6 +78,16 @@ class ChatBox(db.Model):
         return f"<ChatBox user1={self.user1_id} user2={self.user2_id} messages={self.messages}>"
 
 
+class FriendRequest(db.Model):
+    """Friend request data."""
+    __tablename__ = "friend_request"
+
+    sender = db.Column(db.Integer, db.ForeignKey(
+        "user_data.user_id"), primary_key=True)
+    receiver = db.Column(db.Integer, db.ForeignKey(
+        "user_data.user_id"), primary_key=True)
+
+
 class Message(db.Model):
     """A message data."""
 
@@ -302,4 +312,4 @@ if __name__ == "__main__":
 
     with app.app_context():
         db.create_all()
-        example_data()
+        # example_data()

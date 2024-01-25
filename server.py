@@ -238,8 +238,100 @@ class FitnessRequest:
 @app.route("/friends")
 def friends():
     """View friends list."""
+    if "user_email" not in session:
+        return redirect("/")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
 
-    return render_template("friends.html")
+    receiver = user.user_id
+    friend_requests = crud.get_friend_rec(receiver)
+    # get all sender ids from req
+    # query db for all sender user ids to get users
+    # create dictionary of user_id=>user
+    # pass dict to jinja
+    # use dict to show user info
+
+    return render_template("friends.html", friend_request=friend_request)
+
+
+@app.route("/friends/request", methods=["POST"])
+def friend_request():
+
+    if "user_email" not in session:
+        return redirect("/")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    friend_email = request.get_json()['friend']
+    recipient = crud.get_user_by_email(friend_email)
+    if not recipient:
+        return "{}", 404
+    sender = user.user_id
+    # todo: are we already friends?
+    crud.create_friend_req(sender=sender, receiver=recipient.user_id)
+
+    return "{}"
+
+
+def delete_request():
+    friend_id = request.args.get("friend")
+    if "user_email" not in session:
+        return redirect("/"), 401
+    user = crud.get_user_by_email(session["user_email"])
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    sender = user.id
+    crud.delete_friend_req(
+        sender=sender, receivers=friend_id)
+    crud.delete_friend_req(
+        sender=friend_id, receivers=sender)
+
+    return redirect('/')
+
+
+@app.route("/friends/adding", methods=["POST"])
+def add_friend():
+
+    if "user_email" not in session:
+        return redirect("/")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    id = request.get_json()['friend_id']
+    crud.make_friend(id, user)
+
+    return "{}"
+
+
+def remove_friend():
+    new_friend = request.args.get("friend")
+    if "user_email" not in session:
+        return redirect("/"), 401
+    user = crud.get_user_by_email(session["user_email"])
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    crud.lose_friend(user, new_friend)
+    crud.lose_friend(new_friend, user)
+
+    return redirect('friends')
 
 
 @app.route("/challenges")

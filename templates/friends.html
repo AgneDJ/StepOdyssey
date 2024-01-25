@@ -1,28 +1,117 @@
 {% extends 'base.html' %}
-
+{% include 'friend_request.html' %}
 {% block content %}
-<h2>My Friends</h2>
-<div class="col-sm">
+    <div class="row">
+        <br>
+        <h1>Your Friends</h1>
+        <br>
+    </div>
+    <div id = "Friends">
     <table class="table table-dark">
         <thead>
           <tr>
-            <th scope="col"></th>
-            <th scope="col">Name</th>
-            <th scope="col">DailySteps</th>
-            <th scope="col">Action</th>
+            <td scope="col">Name</td>
+            <td scope="col">Daily Steps</td>
+            <td scope="col">Action</td>
+            <td scope="col">Status</td>
           </tr>
         </thead>
         <tbody>
             <tr>
-                <td scope="col"></td>
-                <td scope="col">Peter</th></td>
+                <td scope="col">Peter</td>
                 <td scope="col">1986</td>
-                <td scope="col"><button id = "remove">Remove</button></th></td>
+                <td scope="col"><button id = "remove">Remove from friends list</button></td>
+                <td scope="col">1986</td>
             </tr>
         </tbody>
       </table>
+    </div>
   </div>
-                    
-        
+  <div id = "Pending">
+    <table class="table table-dark">
+        <thead>
+          <tr>
+            <td scope="col">Name</td>
+            <td scope="col">Action</td>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="col">Name</td>
+                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="add" type="submit">Add</button></td>
+                <nav class="navbar navbar-light bg-light">
+                    <form class="form-inline">
+                      <input class="form-control mr-sm-2" id="friend_req" type="search" placeholder="Add user email" aria-label="Search">
+                      <button class="btn btn-outline-success my-2 my-sm-0" id="friend_req_button" type="submit">Send a friend request</button>
+                      <td>{{friend_request}}</td>
+                    </form>
+                  </nav>
+                
+            </tr>
+        </tbody>
+      </table>
+    </div>             
+        <script>
+            function send_friend_req(e) {
+                e.preventDefault()
+                let input = document.getElementById("friend_req").value;
+                if (input == "") {
+                    return;
+                }
+                fetch("https://127.0.0.1:5000/friends/request", {
+                    method: "POST",
+                    headers: {
+                    "Content-type": "application/json",
+                    Accept: "application/json",
+                    },
+                    body: JSON.stringify({ friend: input }),
+                })
+                    .then((res) => {
+                    if (res.ok) {
+                        document.getElementById("friend_req").innerHTML = "Friend request is sent!";
+                        return res.json();
+                    } else {
+                        alert("Something is wrong");
+                    }
+                    })
+                    .then((jsonResponse) => {
+                    // Log the response data in the console
+                    console.log(jsonResponse);
+                    })
+                    .catch((err) => console.error(err));
+
+
+                }
+                document.getElementById("friend_req_button").addEventListener("click", send_friend_req);
+     
+            function add_friend(e) {
+                e.preventDefault()
+                
+                fetch("https://127.0.0.1:5000/friends/adding", {
+                    method: "POST",
+                    headers: {
+                    "Content-type": "application/json",
+                    Accept: "application/json",
+                    },
+                    body: JSON.stringify({ friend: input }),
+                })
+                    .then((res) => {
+                    if (res.ok) {
+                        document.getElementById("friend_req").innerHTML = "Friend request is sent!";
+                        return res.json();
+                    } else {
+                        alert("Something is wrong");
+                    }
+                    })
+                    .then((jsonResponse) => {
+                    // Log the response data in the console
+                    console.log(jsonResponse);
+                    })
+                    .catch((err) => console.error(err));
+
+
+                }
+                document.getElementById("add").addEventListener("click", add_friend);
+        </script>
     
 {% endblock %}
