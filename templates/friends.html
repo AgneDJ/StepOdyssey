@@ -36,18 +36,28 @@
           </tr>
         </thead>
         <tbody>
+            {% for row in user_list %}
             <tr>
                 <td scope="col">Name</td>
                 <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="add" type="submit">Add</button></td>
+                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="remove" type="submit">Remove</button></td>
+                <div id="remove_buttons">
+                    <td>
+                        <button id = "remove-{{row.user_id}}">Remove</button>
+                    </td>
+                    </div>
                 <nav class="navbar navbar-light bg-light">
                     <form class="form-inline">
                       <input class="form-control mr-sm-2" id="friend_req" type="search" placeholder="Add user email" aria-label="Search">
                       <button class="btn btn-outline-success my-2 my-sm-0" id="friend_req_button" type="submit">Send a friend request</button>
-                      <td>{{friend_request}}</td>
+                     
+                      <td>{{row.user_name}}</td>
                     </form>
                   </nav>
                 
             </tr>
+
+            {% endfor %}
         </tbody>
       </table>
     </div>             
@@ -80,7 +90,6 @@
                     })
                     .catch((err) => console.error(err));
 
-
                 }
                 document.getElementById("friend_req_button").addEventListener("click", send_friend_req);
      
@@ -112,6 +121,39 @@
 
                 }
                 document.getElementById("add").addEventListener("click", add_friend);
+
+            function remove_request(e) {
+            e.preventDefault()
+            
+            fetch("https://127.0.0.1:5000/friends/notadding", {
+                method: "POST",
+                headers: {
+                "Content-type": "application/json",
+                Accept: "application/json",
+                },
+                body: JSON.stringify({ friend: input }),
+            })
+                .then((res) => {
+                if (res.ok) {
+                    document.getElementById("remove").innerHTML = "Friend request is sent!";
+                    return res.json();
+                } else {
+                    alert("Something is wrong");
+                }
+                })
+                .then((jsonResponse) => {
+                // Log the response data in the console
+                console.log(jsonResponse);
+                })
+                .catch((err) => console.error(err));
+
+
+            }
+            document.getElementById("remove").addEventListener("click", remove_request);
+
+
+
         </script>
+        <script src="/static/remove_buttons.js"></script>
     
 {% endblock %}

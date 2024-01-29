@@ -28,7 +28,7 @@ class User(db.Model):
         'UserChallenges', back_populates="user")
 
     def __repr__(self):
-        return f"<User user_id={self.user_id} name={self.user_name} email={self.user_email} password={self.user_password}>"
+        return f"<{self.user_name}>"
 
 
 class Friends(db.Model):

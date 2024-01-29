@@ -33,6 +33,12 @@ def get_user_by_id(user_id):
     return User.query.get(user_id)
 
 
+def get_users_by_ids(ids):
+    """Return a users by primary key."""
+
+    return User.query.filter(User.user_id.in_(ids)).all()
+
+
 def get_user_by_email(email):
     """Return a user by email."""
 
@@ -93,8 +99,9 @@ def delete_friend_req(sender, receiver):
     """Delete a friend request."""
     request = FriendRequest.query.filter(
         FriendRequest.sender == sender, FriendRequest.receiver == receiver).first()
-    if len(request) > 0:
-        db.session.delete(request[0])
+    if request:
+        db.session.delete(request)
+        db.session.commit()
 
 
 def make_friend(sender, receiver):
@@ -129,6 +136,7 @@ def get_friend_rec(receiver):
         FriendRequest.receiver == receiver).all()
 
     return request
+
 
 # achievements--------------------------
 # def add_user_achievements(user_id, achievement_id, date, image):
