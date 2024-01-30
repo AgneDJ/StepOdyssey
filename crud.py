@@ -1,7 +1,7 @@
 """CRUD operations."""
 
 from model import db, User, Friends, Steps, ChatBox, Challenges, Achievements, UserChallenges, UserAchievements, Message, FriendRequest, connect_to_db
-from sqlalchemy import insert, or_
+from sqlalchemy import insert, or_, and_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
 import os
@@ -47,8 +47,10 @@ def get_friends(receiver):
     for friend in friend_list:
         user_ids.append(friend.friend_id)
         user_ids.append(friend.user_id)
+
     user_ids = set(user_ids)
-    user_ids.remove(receiver)
+    if len(user_ids) > 0:
+        user_ids.remove(receiver)
 
     return user_ids
 
@@ -138,8 +140,13 @@ def make_friend(sender, receiver):
 def lose_friend(sender, receiver):
     """Remove friend."""
     destroy_friendship = Friends.query.filter(
-        Friends.user_id == sender, Friends.friend_id == receiver).first()[0]
-    db.session.delete(destroy_friendship)
+        or_(
+            and_(Friends.friend_id == receiver, Friends.user_id == sender),
+            and_(Friends.friend_id == sender, Friends.user_id == receiver)
+        )).all()
+    for friends in destroy_friendship:
+        print(friends)
+        db.session.delete(friends)
     db.session.commit()
 
     return destroy_friendship
@@ -151,6 +158,13 @@ def get_friend_req(sender, receiver):
         FriendRequest.sender == sender, FriendRequest.receiver == receiver).first()
 
     return request
+
+
+def is_there_friend_request(receiver):
+    """Return boolean if there are any friend requests."""
+
+    requests = get_friend_rec(receiver)
+    return len(requests) > 0
 
 
 def get_friend_rec(receiver):

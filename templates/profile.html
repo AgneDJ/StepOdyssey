@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% include 'friend_request.html' %}
 {% block content %}
@@ -13,7 +12,23 @@
     <body>
      
         Hi {{name}}! Welcome to Step Odyssey!
-      
+        <div>
+
+        <img src="/static/img/bear.png" class="rounded-circle shadow-4"
+        style="width: 150px;" alt="Avatar" />
+        <br>
+        <div class="input-group mb-3">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="inputGroupFile02">
+              <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+            </div>
+            <div class="input-group-append">
+              <span class="input-group-text" id="inputGroupFileAddon02">Upload</span>
+            </div>
+          </div>
+
+        </div>
+
         <form action="/sync">
             <button type="submit" class="btn btn-primary">Sync data</button>
         </form>

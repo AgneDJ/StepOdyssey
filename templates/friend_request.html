@@ -1,3 +1,5 @@
-<button type="button" class="btn btn-success">
+{% if has_friend_requests %}
+<button id = "notification" type="button" class="btn btn-success">
     !New friend request <span class="badge badge-light"></span>
 </button>
+{% endif %}

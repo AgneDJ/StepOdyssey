@@ -68,17 +68,11 @@ def rendering_profile():
         })
 
     lifetime_steps = crud.lifetime_steps(user.user_id)
+    has_friend_requests = crud.is_there_friend_request(receiver=user.user_id)
 
     # user_achievements = crud.get_user_achievements()
 
-    return render_template("profile.html", name=user.user_name, date=date, daily_total=daily_total, user_challenges=user_challenges, lifetime_steps=lifetime_steps)
-
-
-@app.route("/profile")
-def profile():
-    """View user profile."""
-    # name = request.args.get('user_name')
-    return render_template("profile.html")
+    return render_template("profile.html", has_friend_requests=has_friend_requests, name=user.user_name, date=date, daily_total=daily_total, user_challenges=user_challenges, lifetime_steps=lifetime_steps)
 
 
 @app.route("/signup")
@@ -264,12 +258,9 @@ def friends():
     friends = crud.get_friends(receiver)
     friends_list = crud.get_users_by_ids(friends)
 
-    # create dictionary of user_id=>user?
-    # pass dict to jinja?
-    # use dict to show user info for every fr
-    #
+    has_friend_requests = crud.is_there_friend_request(receiver=user.user_id)
 
-    return render_template("friends.html", user_list=user_list, friends_list=friends_list)
+    return render_template("friends.html", has_friend_requests=has_friend_requests, user_list=user_list, friends_list=friends_list)
 
 
 @app.route("/friends/request", methods=["POST"])
@@ -346,8 +337,9 @@ def add_friend():
     return "{}"
 
 
+@app.route("/friends/removing_friends", methods=["POST"])
 def remove_friend():
-    new_friend = request.args.get("friend")
+    new_friend = request.get_json()["friend"]
     if "user_email" not in session:
         return redirect("/"), 401
     user = crud.get_user_by_email(session["user_email"])
@@ -356,10 +348,9 @@ def remove_friend():
         del session["user_email"]
         return "{}", 401
 
-    crud.lose_friend(user, new_friend)
-    crud.lose_friend(new_friend, user)
+    crud.lose_friend(sender=new_friend, receiver=user.user_id)
 
-    return redirect('friends')
+    return "{}"
 
 
 @app.route("/challenges")

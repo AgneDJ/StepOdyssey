@@ -25,7 +25,8 @@
             <tr>
                 <td scope="col">{{user}}</td>
                 <td scope="col">1986</td>
-                <td scope="col"><button id = "remove">Remove from friends list</button></td>
+                <!-- <td scope="col"><button id = "remove">Remove from friends list</button></td> -->
+                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="removing-{{user.user_id}}" type="submit">Remove from friends list</button></td>
                 <td scope="col">1986</td>
             </tr>
             {% endfor %}
@@ -106,5 +107,6 @@
             </script>
         <script src="/static/remove_buttons.js"></script>
         <script src="/static/add_buttons.js"></script>
+        <script src="/static/removing_friends.js"></script>
     
 {% endblock %}
