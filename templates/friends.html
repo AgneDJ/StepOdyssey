@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 {% include 'friend_request.html' %}
 {% block content %}
+
+                    
     <div class="row">
         <br>
         <h1>Your Friends</h1>
         <br>
     </div>
+    <input class="form-control mr-sm-2" id="friend_req" type="search" placeholder="Add user email" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" id="friend_req_button" type="submit">Send a friend request</button>
     <div id = "Friends">
     <table class="table table-dark">
         <thead>
@@ -17,12 +21,14 @@
           </tr>
         </thead>
         <tbody>
+            {% for user in friends_list %}
             <tr>
-                <td scope="col">Peter</td>
+                <td scope="col">{{user}}</td>
                 <td scope="col">1986</td>
                 <td scope="col"><button id = "remove">Remove from friends list</button></td>
                 <td scope="col">1986</td>
             </tr>
+            {% endfor %}
         </tbody>
       </table>
     </div>
@@ -32,27 +38,28 @@
         <thead>
           <tr>
             <td scope="col">Name</td>
+           
             <td scope="col">Action</td>
+          
           </tr>
         </thead>
         <tbody>
             {% for row in user_list %}
             <tr>
-                <td scope="col">Name</td>
-                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="add" type="submit">Add</button></td>
-                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="remove" type="submit">Remove</button></td>
+                <td>{{row.user_name}}</td>
+                <div id="accept_buttons">
+                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="accept-{{row.user_id}}" type="submit">Accept</button></td>
+                </div>
                 <div id="remove_buttons">
-                    <td>
-                        <button id = "remove-{{row.user_id}}">Remove</button>
-                    </td>
-                    </div>
+                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id = "remove-{{row.user_id}}" type="submit">Remove</button></td>
+                </div>
                 <nav class="navbar navbar-light bg-light">
-                    <form class="form-inline">
-                      <input class="form-control mr-sm-2" id="friend_req" type="search" placeholder="Add user email" aria-label="Search">
-                      <button class="btn btn-outline-success my-2 my-sm-0" id="friend_req_button" type="submit">Send a friend request</button>
-                     
-                      <td>{{row.user_name}}</td>
-                    </form>
+                <form class="form-inline">
+                    <!-- <input class="form-control mr-sm-2" id="friend_req" type="search" placeholder="Add user email" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" id="friend_req_button" type="submit">Send a friend request</button> -->
+                    
+                    
+                </form>
                   </nav>
                 
             </tr>
@@ -62,70 +69,13 @@
       </table>
     </div>             
         <script>
-            function send_friend_req(e) {
-                e.preventDefault()
-                let input = document.getElementById("friend_req").value;
-                if (input == "") {
-                    return;
-                }
-                fetch("https://127.0.0.1:5000/friends/request", {
-                    method: "POST",
-                    headers: {
-                    "Content-type": "application/json",
-                    Accept: "application/json",
-                    },
-                    body: JSON.stringify({ friend: input }),
-                })
-                    .then((res) => {
-                    if (res.ok) {
-                        document.getElementById("friend_req").innerHTML = "Friend request is sent!";
-                        return res.json();
-                    } else {
-                        alert("Something is wrong");
-                    }
-                    })
-                    .then((jsonResponse) => {
-                    // Log the response data in the console
-                    console.log(jsonResponse);
-                    })
-                    .catch((err) => console.error(err));
-
-                }
-                document.getElementById("friend_req_button").addEventListener("click", send_friend_req);
-     
-            function add_friend(e) {
-                e.preventDefault()
-                
-                fetch("https://127.0.0.1:5000/friends/adding", {
-                    method: "POST",
-                    headers: {
-                    "Content-type": "application/json",
-                    Accept: "application/json",
-                    },
-                    body: JSON.stringify({ friend: input }),
-                })
-                    .then((res) => {
-                    if (res.ok) {
-                        document.getElementById("friend_req").innerHTML = "Friend request is sent!";
-                        return res.json();
-                    } else {
-                        alert("Something is wrong");
-                    }
-                    })
-                    .then((jsonResponse) => {
-                    // Log the response data in the console
-                    console.log(jsonResponse);
-                    })
-                    .catch((err) => console.error(err));
-
-
-                }
-                document.getElementById("add").addEventListener("click", add_friend);
-
-            function remove_request(e) {
+        function send_friend_req(e) {
             e.preventDefault()
-            
-            fetch("https://127.0.0.1:5000/friends/notadding", {
+            let input = document.getElementById("friend_req").value;
+            if (input == "") {
+                return;
+            }
+            fetch("https://127.0.0.1:5000/friends/request", {
                 method: "POST",
                 headers: {
                 "Content-type": "application/json",
@@ -135,7 +85,7 @@
             })
                 .then((res) => {
                 if (res.ok) {
-                    document.getElementById("remove").innerHTML = "Friend request is sent!";
+                    document.getElementById("friend_req").innerHTML = "Friend request is sent!";
                     return res.json();
                 } else {
                     alert("Something is wrong");
@@ -147,13 +97,14 @@
                 })
                 .catch((err) => console.error(err));
 
-
             }
-            document.getElementById("remove").addEventListener("click", remove_request);
+            document.getElementById("friend_req_button").addEventListener("click", send_friend_req);
+    
 
 
 
-        </script>
+            </script>
         <script src="/static/remove_buttons.js"></script>
+        <script src="/static/add_buttons.js"></script>
     
 {% endblock %}

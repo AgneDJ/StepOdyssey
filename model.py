@@ -188,6 +188,7 @@ def example_data():
     Achievements.query.delete()
     ChatBox.query.delete()
     Steps.query.delete()
+    FriendRequest()
     Friends.query.delete()
     User.query.delete()
     db.session.commit()

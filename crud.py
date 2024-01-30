@@ -1,7 +1,7 @@
 """CRUD operations."""
 
 from model import db, User, Friends, Steps, ChatBox, Challenges, Achievements, UserChallenges, UserAchievements, Message, FriendRequest, connect_to_db
-from sqlalchemy import insert
+from sqlalchemy import insert, or_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
 import os
@@ -37,6 +37,20 @@ def get_users_by_ids(ids):
     """Return a users by primary key."""
 
     return User.query.filter(User.user_id.in_(ids)).all()
+
+
+def get_friends(receiver):
+
+    friend_list = Friends.query.filter(or_(Friends.friend_id == receiver,
+                                           Friends.user_id == receiver)).all()
+    user_ids = []
+    for friend in friend_list:
+        user_ids.append(friend.friend_id)
+        user_ids.append(friend.user_id)
+    user_ids = set(user_ids)
+    user_ids.remove(receiver)
+
+    return user_ids
 
 
 def get_user_by_email(email):
@@ -108,10 +122,17 @@ def make_friend(sender, receiver):
     """Add friend."""
     request = FriendRequest.query.filter(
         FriendRequest.sender == sender, FriendRequest.receiver == receiver).first()
-    if len(request) == 0:
+    if not request:
         return
-    create_friendship = Friends(sender, receiver, True)
-    db.session.delete(request[0])
+
+    relation = Friends(user_id=sender,
+                       friend_id=receiver, status_acceptance=True)
+    print("===========================================")
+    print(relation)
+    db.session.add(relation)
+    db.session.delete(request)
+    db.session.commit()
+    print("visogeeeeeero")
 
 
 def lose_friend(sender, receiver):
@@ -119,8 +140,9 @@ def lose_friend(sender, receiver):
     destroy_friendship = Friends.query.filter(
         Friends.user_id == sender, Friends.friend_id == receiver).first()[0]
     db.session.delete(destroy_friendship)
+    db.session.commit()
 
-    return create_friendship
+    return destroy_friendship
 
 
 def get_friend_req(sender, receiver):

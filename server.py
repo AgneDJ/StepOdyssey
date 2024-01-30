@@ -261,13 +261,15 @@ def friends():
 
     user_list = crud.get_users_by_ids(senders)
     print(user_list)
+    friends = crud.get_friends(receiver)
+    friends_list = crud.get_users_by_ids(friends)
 
     # create dictionary of user_id=>user?
     # pass dict to jinja?
     # use dict to show user info for every fr
     #
 
-    return render_template("friends.html", user_list=user_list)
+    return render_template("friends.html", user_list=user_list, friends_list=friends_list)
 
 
 @app.route("/friends/request", methods=["POST"])
@@ -309,20 +311,37 @@ def delete_request():
     return "{}"
 
 
-@app.route("/friends/adding", methods=["POST"])
+@app.route("/friends/accepting", methods=["POST"])
 def add_friend():
 
+    friend_id = request.get_json()["friend"]
     if "user_email" not in session:
-        return redirect("/")
-    email = session["user_email"]
-    user = crud.get_user_by_email(email)
+        return redirect("/"), 401
+    user = crud.get_user_by_email(session["user_email"])
     # checking if user exists
     if not user:
         del session["user_email"]
         return "{}", 401
+    print("lllllllaaaaaaabas")
 
-    id = request.get_json()['friend_id']
-    crud.make_friend(id, user)
+    # id = request.get_json()['friend_id']
+    crud.make_friend(friend_id, user.user_id)
+
+    crud.delete_friend_req(sender=friend_id, receiver=user.user_id)
+    return "{}"
+
+    # if "user_email" not in session:
+    #     return redirect("/")
+    # email = session["user_email"]
+    # user = crud.get_user_by_email(email)
+    # # checking if user exists
+    # if not user:
+    #     del session["user_email"]
+    #     return "{}", 401
+
+    # # id = request.get_json()['friend_id']
+    # crud.make_friend(id, user)
+    # crud.delete_friend_req(sender=friend_id, receiver=user.user_id)
 
     return "{}"
 
