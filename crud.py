@@ -87,12 +87,43 @@ def get_achievements():
     return achievements
 
 
+def get_user_achievements(user_id):
+    """Return all user achievements by title."""
+
+    user_achievements = UserAchievements.query.get(user_id)
+
+    return user_achievements
+
+# do I need a commit?
+
+
 def add_data_to_user_challenges(user_id, challenge_id, start_time, end_time, complete):
     """Adds challenge data to db"""
     user_challenges = UserChallenges(user_id=user_id, challenge_id=challenge_id,
                                      start_time=start_time, end_time=end_time, complete=complete)
-
+    db.session.add(user_challenges)
+    db.session.commit()
     return user_challenges
+
+# do I need a commit?
+
+
+def add_data_to_user_achievements(user_id, achievement_id, date):
+    """Adds achievements to personal db"""
+    user_achievements = UserAchievements(user_id=user_id, achievement_id=achievement_id,
+                                         date=date)
+    db.session.add(user_achievements)
+    db.session.commit()
+
+    return user_achievements
+
+
+def get_achievement_img(achievement_id):
+    """Gets achievements image url by achievement id"""
+    achievement_image = db.session.query(
+        Achievements.image).filter(achievement_id).first()
+
+    return achievement_image
 
 
 def lifetime_steps(user_id):
@@ -109,6 +140,14 @@ def create_friend_req(sender, receiver):
     db.session.add(req)
     db.session.commit()
     return req
+
+
+def create_user_achievements(achievements_id, user_id, date):
+    usr_achvm = UserAchievements(
+        achievements_id=achievements_id, user_id=user_id, date=date)
+    db.session.add(usr_achvm)
+    db.session.commit()
+    return usr_achvm
 
 
 def delete_friend_req(sender, receiver):

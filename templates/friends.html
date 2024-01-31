@@ -91,13 +91,14 @@
                 } else {
                     alert("Something is wrong");
                 }
+                
                 })
                 .then((jsonResponse) => {
                 // Log the response data in the console
                 console.log(jsonResponse);
                 })
                 .catch((err) => console.error(err));
-
+                location.reload();
             }
             document.getElementById("friend_req_button").addEventListener("click", send_friend_req);
     

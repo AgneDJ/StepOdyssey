@@ -12,20 +12,20 @@
     <body>
      
         Hi {{name}}! Welcome to Step Odyssey!
-        <div>
-
-        <img src="/static/img/bear.png" class="rounded-circle shadow-4"
-        style="width: 150px;" alt="Avatar" />
+       
+        <div class="rounded-circle shadow-4">
+            <img id="myImg" src="#" class="avatar" style="width: 500px;" alt="Avatar" />
+        </div>
+        </body>
         <br>
         <div class="input-group mb-3">
             <div class="custom-file">
-              <input type="file" class="custom-file-input" id="inputGroupFile02">
-              <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+              <input type='file' class="custom-file-input" id="inputGroupFile02">
             </div>
-            <div class="input-group-append">
-              <span class="input-group-text" id="inputGroupFileAddon02">Upload</span>
-            </div>
+          
           </div>
+
+           
 
         </div>
 
@@ -87,6 +87,22 @@
               </div>
             </div>
         </div>
+
+        <script type="text/javascript">
+            window.addEventListener('load', function() {document.querySelector('input[type="file"]').addEventListener('change', function() {
+                let img = document.querySelector('.avatar');   
+                console.log("0000000000000000000"+ img) 
+                if (this.files && this.files[0]) {
+                    img.onload = () => {
+                        URL.revokeObjectURL(img.src);
+                    };
+                    img.src = URL.createObjectURL(this.files[0]); 
+                }
+            });
+        });
+            
+
+        </script>
     </body>
 </html>
 {% endblock %} 
