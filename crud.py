@@ -90,7 +90,8 @@ def get_achievements():
 def get_user_achievements(user_id):
     """Return all user achievements by title."""
 
-    user_achievements = UserAchievements.query.get(user_id)
+    user_achievements = UserAchievements.query.filter(
+        UserAchievements.user_id == user_id).all()
 
     return user_achievements
 
@@ -108,14 +109,14 @@ def add_data_to_user_challenges(user_id, challenge_id, start_time, end_time, com
 # do I need a commit?
 
 
-def add_data_to_user_achievements(user_id, achievement_id, date):
-    """Adds achievements to personal db"""
-    user_achievements = UserAchievements(user_id=user_id, achievement_id=achievement_id,
-                                         date=date)
-    db.session.add(user_achievements)
-    db.session.commit()
+# def add_data_to_user_achievements(user_id, achievements_id, date):
+#     """Adds achievements to personal db"""
+#     user_achievements = UserAchievements(user_id=user_id, achievements_id=achievements_id,
+#                                          date=date)
+#     db.session.add(user_achievements)
+#     db.session.commit()
 
-    return user_achievements
+#     return user_achievements
 
 
 def get_achievement_img(achievement_id):
@@ -143,6 +144,8 @@ def create_friend_req(sender, receiver):
 
 
 def create_user_achievements(achievements_id, user_id, date):
+    if (UserAchievements.query.filter(UserAchievements.achievements_id == achievements_id, UserAchievements.user_id == user_id).first()):
+        return
     usr_achvm = UserAchievements(
         achievements_id=achievements_id, user_id=user_id, date=date)
     db.session.add(usr_achvm)

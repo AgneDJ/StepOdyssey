@@ -67,25 +67,30 @@ def rendering_profile():
             'duration': humanize.naturaltime(duration)
         })
     # achievement adding process
-    lifetime_steps = crud.lifetime_steps(user.user_id)
+    # lifetime_steps = crud.lifetime_steps(user.user_id)
+    lifetime_steps = 10000
     all_achievements = crud.get_achievements()
     user_achievements = crud.get_user_achievements(user.user_id)
-    for achievement in all_achievements:
-        if achievement.condition <= lifetime_steps:
-            crud.create_user_achievements(
-                achievement.achievements_id, user.user_id, now)
-            # UserAchievements.achievements_id = achievement.achievements_id,
-            # UserAchievements.user_id = user.user_id
-            # UserAchievements.date = now
-            achievement_image = crud.get_achievement_img(
-                user_achievements.achievements_id)
-            crud.add_data_to_user_achievements(
-                user_achievements.user_id, user_achievements.achievements_id, user_achievements.date)
+
+    achievement_image = None
+
+    if all_achievements is not None:
+        for achievement in all_achievements:
+            if achievement.condition <= lifetime_steps:
+                crud.create_user_achievements(
+                    achievement.achievements_id, user.user_id, now)
+                # UserAchievements.achievements_id = achievement.achievements_id,
+                # UserAchievements.user_id = user.user_id
+                # UserAchievements.date = now
+                achievement_image = achievement.image
+                # crud.add_data_to_user_achievements(
+                #     user.user_id, achievement.achievements_id, now)
 
     has_friend_requests = crud.is_there_friend_request(receiver=user.user_id)
 
-    # user_achievements = crud.get_user_achievements()
-
+    user_achievements = crud.get_user_achievements(user.user_id)
+    print("------------")
+    print(user_achievements)
     return render_template("profile.html", has_friend_requests=has_friend_requests, name=user.user_name, date=date, daily_total=daily_total, user_achievements=user_achievements, achievement_image=achievement_image, user_challenges=user_challenges, lifetime_steps=lifetime_steps)
 
 

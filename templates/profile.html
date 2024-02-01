@@ -16,7 +16,7 @@
         <div class="rounded-circle shadow-4">
             <img id="myImg" src="#" class="avatar" style="width: 500px;" alt="Avatar" />
         </div>
-        </body>
+    </body>
         <br>
         <div class="input-group mb-3">
             <div class="custom-file">
@@ -52,15 +52,22 @@
 
             <div class="row">
                 <br>
-                <h1>CHALLENGES AND Achievements</h1>
+             
                 <br>
             </div>
            
+            {% if user_achievements %}
             <div class="row">
-                <div class="col-sm-12">your achievements</div>
-                <div class="col-sm-12"></div>
+                <div class="col-sm-6"><h1>Your achievements</h1></div>
+                <div class="col-sm-6"></div>
+                {% for user_achievement in user_achievements %}
+                <div class="col-sm-2"><img src={{user_achievement.achievements.image}} class="rounded-circle shadow-4" style="width: 100px;" alt="Achievements image">
+                    <br>
+                <div class="col-sm-7">{{user_achievement.achievements.title}}</div>
+                {% endfor %}
             </div>
-              <div class="col-sm-12">your challenges</div>
+            {% endif %} 
+              <div class="col-sm-12"><h1>Your challenges</h1></div>
             <div class="row">
                 <div class="col-sm-2">Title</div>
                 <div class="col-sm-2">Duration</div>
