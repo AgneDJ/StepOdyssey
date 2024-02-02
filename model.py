@@ -17,7 +17,8 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_name = db.Column(db.String, nullable=False)
     user_email = db.Column(db.String, nullable=False)
-    user_password = db.Column(db.String, nullable=False)
+    user_password = db.Column(db.String)
+    user_avatar = db.Column(db.String)
     refresh_token = db.Column(db.String)
 
     # friends = db.relationship('Friends', back_populates="user")
@@ -28,7 +29,7 @@ class User(db.Model):
         'UserChallenges', back_populates="user")
 
     def __repr__(self):
-        return f"<{self.user_name}>"
+        return f"{self.user_name}"
 
 
 class Friends(db.Model):
@@ -63,19 +64,19 @@ class Steps(db.Model):
         return f"<Steps {self.user.user_name},{self.date}, {self.daily_total}>"
 
 
-class ChatBox(db.Model):
-    """A chat box data."""
+# class ChatBox(db.Model):
+#     """A chat box data."""
 
-    __tablename__ = "chat_box"
+#     __tablename__ = "chat_box"
 
-    chat_box_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user1_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
-    user2_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+#     chat_box_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     user1_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+#     user2_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
 
-    messages = db.relationship('Message', back_populates="chat_box")
+#     messages = db.relationship('Message', back_populates="chat_box")
 
-    def __repr__(self):
-        return f"<ChatBox user1={self.user1_id} user2={self.user2_id} messages={self.messages}>"
+#     def __repr__(self):
+#         return f"<ChatBox user1={self.user1_id} user2={self.user2_id} messages={self.messages}>"
 
 
 class FriendRequest(db.Model):
@@ -88,21 +89,21 @@ class FriendRequest(db.Model):
         "user_data.user_id"), primary_key=True)
 
 
-class Message(db.Model):
-    """A message data."""
+# class Message(db.Model):
+#     """A message data."""
 
-    __tablename__ = "message"
+#     __tablename__ = "message"
 
-    message_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    chat_box_id = db.Column(db.Integer, db.ForeignKey("chat_box.chat_box_id"))
-    date = db.Column(db.DateTime)
-    message = db.Column(db.Text)
-    sender = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+#     message_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     chat_box_id = db.Column(db.Integer, db.ForeignKey("chat_box.chat_box_id"))
+#     date = db.Column(db.DateTime)
+#     message = db.Column(db.Text)
+#     sender = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
 
-    chat_box = db.relationship('ChatBox', back_populates="messages")
+#     chat_box = db.relationship('ChatBox', back_populates="messages")
 
-    def __repr__(self):
-        return f"<Message message_id={self.message_id} chat_box_id={self.chat_box_id_id} date={self.date} message={self.message} sender={self.sender}>"
+#     def __repr__(self):
+#         return f"<Message message_id={self.message_id} chat_box_id={self.chat_box_id_id} date={self.date} message={self.message} sender={self.sender}>"
 
 
 class Achievements(db.Model):
@@ -186,20 +187,16 @@ def example_data():
     """Create some sample data."""
 
     Achievements.query.delete()
-    ChatBox.query.delete()
+    # ChatBox.query.delete()
     Steps.query.delete()
     FriendRequest()
     Friends.query.delete()
     User.query.delete()
     db.session.commit()
-    gagne = User(user_name='gAgne', user_email='fizike@gmail.com',
-                 user_password='Asdf1234')
-    bagne = User(user_name='Bagne', user_email='fizikea@gmail.com',
-                 user_password='Asdf1235')
-    cagne = User(user_name='Cagne', user_email='fizikeu@gmail.com',
-                 user_password='Asdf1236')
-    dagne = User(user_name='Dagne', user_email='fizikei@gmail.com',
-                 user_password='Asdf1236')
+    gagne = User(user_name='gAgne', user_email='fizike@gmail.com')
+    bagne = User(user_name='Bagne', user_email='fizikea@gmail.com')
+    cagne = User(user_name='Cagne', user_email='fizikeu@gmail.com')
+    dagne = User(user_name='Dagne', user_email='fizikei@gmail.com')
 
     db.session.add_all([gagne, bagne, cagne, dagne])
     db.session.commit()
@@ -253,17 +250,17 @@ def example_data():
     db.session.add_all([challenge1, challenge2, challenge3, challenge4, challenge5,
                        challenge6, challenge7, challenge8, challenge9, challenge10, challenge11])
 
-    chat_box1 = ChatBox(user1_id=gagne.user_id,
-                        user2_id=bagne.user_id,)
-    chat_box2 = ChatBox(user1_id=bagne.user_id,
-                        user2_id=cagne.user_id)
-    chat_box3 = ChatBox(user1_id=cagne.user_id,
-                        user2_id=dagne.user_id)
-    chat_box4 = ChatBox(user1_id=dagne.user_id,
-                        user2_id=gagne.user_id)
+    # chat_box1 = ChatBox(user1_id=gagne.user_id,
+    #                     user2_id=bagne.user_id,)
+    # chat_box2 = ChatBox(user1_id=bagne.user_id,
+    #                     user2_id=cagne.user_id)
+    # chat_box3 = ChatBox(user1_id=cagne.user_id,
+    #                     user2_id=dagne.user_id)
+    # chat_box4 = ChatBox(user1_id=dagne.user_id,
+    #                     user2_id=gagne.user_id)
 
-    db.session.add_all([chat_box1, chat_box2, chat_box3, chat_box4])
-    db.session.commit()
+    # db.session.add_all([chat_box1, chat_box2, chat_box3, chat_box4])
+    # db.session.commit()
 
     achievements1 = Achievements(
         image="/static/img/10k_achievement.jpeg", condition=10000, title="10k Nice! You are alive!!")

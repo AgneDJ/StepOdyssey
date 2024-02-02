@@ -1,36 +1,20 @@
 {% extends 'base.html' %}
 {% include 'friend_request.html' %}
 {% block content %}
-<!doctype html>
-<html>
-    <head>
-        <title>Greeting</title>
-        <link rel="stylesheet" href="static/css/styles.css">
-    </head>
-    
-
-    <body>
      
-        Hi {{name}}! Welcome to Step Odyssey!
+        Hi {{user.user_name}}! Welcome to Step Odyssey!
        
         <div class="rounded-circle shadow-4">
-            <img id="myImg" src="#" class="avatar" style="width: 500px;" alt="Avatar" />
+            <img id="myImg" src="{{user.user_avatar}}" class="rounded-circle shadow-4" style="width: 100px;" alt="Avatar" />
         </div>
-    </body>
         <br>
-        <div class="input-group mb-3">
-            <div class="custom-file">
-              <input type='file' class="custom-file-input" id="inputGroupFile02">
-            </div>
-          
-          </div>
-
-           
-
-        </div>
+        
 
         <form action="/sync">
             <button type="submit" class="btn btn-primary">Sync data</button>
+        </form>
+        <form action="/logout">
+            <button type="submit" class="btn btn-primary">Log out</button>
         </form>
         <div class="container">
 
@@ -47,14 +31,7 @@
                 <div class="col-sm">{{lifetime_steps}}</div>
               </div>
             </div>
-        </div>
         <div class="container">
-
-            <div class="row">
-                <br>
-             
-                <br>
-            </div>
            
             {% if user_achievements %}
             <div class="row">
@@ -64,52 +41,58 @@
                 <div class="col-sm-2"><img src={{user_achievement.achievements.image}} class="rounded-circle shadow-4" style="width: 100px;" alt="Achievements image">
                     <br>
                 <div class="col-sm-7">{{user_achievement.achievements.title}}</div>
-                {% endfor %}
             </div>
-            {% endif %} 
-              <div class="col-sm-12"><h1>Your challenges</h1></div>
-            <div class="row">
-                <div class="col-sm-2">Title</div>
-                <div class="col-sm-2">Duration</div>
-                <div class="col-sm-2">Goal</div>
-                <div class="col-sm-2">Time remaining</div>
-                <div class="col-sm-2">Status</div>
-             </div>
-                {% for row in user_challenges %}
-                <div class="row">
-                <div class="col-sm-2">{{row['user_challenge'].challenges.title}}</div>
-                <div class="col-sm-2">{{row['user_challenge'].challenges.duration}}</div>
-                <div class="col-sm-2">{{row['user_challenge'].challenges.total_to_compete}}</div>
-                <div class="col-sm-2">{{row['duration']}}</div>
-                <div class="col-sm-2">
-                    {% if not row['user_challenge'].complete %}
-                    <p>In progress</p>
-                    {% else %}
-                    <p>Completed</p>
-                    {% endif %} 
-                </div>
-                </div>
-
                 {% endfor %}
-              </div>
+            
+            {% endif %} 
+              <div class="col-sm-14"><h1>Your challenges</h1></div>
+                <div class="row">
+                    <div class="col-sm-14">Title</div>
+                    <!-- <div class="col-sm-1">Duration</div>
+                    <div class="col-sm-1">Goal</div> -->
+                    <div class="col-sm-1">Duration</div>
+                    <div class="col-sm-1">Invite</div>
+                    <div class="col-sm-1">status?</div>
+                </div>
+                    {% for row in user_challenges %}
+                <div class="row">
+                    <div class="col-sm-1">{{row['user_challenge'].challenges.title}}</div>
+                    <!-- <div class="col-sm-1">{{row['user_challenge'].challenges.duration}}</div>
+                    <div class="col-sm-1">{{row['user_challenge'].challenges.total_to_compete}}</div> -->
+                    <div class="col-sm-1">{{row['duration']}}</div>
+                    <div class="col-sm-1">
+                    <div class="col-sm-1"></div><p>{{row['status']}}</p></div> 
+                    {% for user in friends_list %}
+                    <div class="col-sm-1"><div class="dropdown">
+                        <button class="dropbtn">Invite Friends</button>
+                            <div class="dropdown-content">
+                                <a href="#">{{user}}</a>
+                            </div>
+                    </div>
+                {% endfor %}
+                </div>  
+                {% endfor %}  
+                  
+                    <!-- in server check if completed or in progress and then pass it here to jinja -->
+                    
+        
+                </div>  
             </div>
         </div>
 
-        <script type="text/javascript">
-            window.addEventListener('load', function() {document.querySelector('input[type="file"]').addEventListener('change', function() {
-                let img = document.querySelector('.avatar');   
-                console.log("0000000000000000000"+ img) 
-                if (this.files && this.files[0]) {
-                    img.onload = () => {
-                        URL.revokeObjectURL(img.src);
-                    };
-                    img.src = URL.createObjectURL(this.files[0]); 
-                }
-            });
-        });
+        <!-- <script type="text/javascript">
+        //     window.addEventListener('load', function() {document.querySelector('input[type="file"]').addEventListener('change', function() {
+        //         let img = document.querySelector('.avatar');   
+        //         console.log("0000000000000000000"+ img) 
+        //         if (this.files && this.files[0]) {
+        //             img.onload = () => {
+        //                 URL.revokeObjectURL(img.src);
+        //             };
+        //             img.src = URL.createObjectURL(this.files[0]); 
+        //         }
+        //     });
+        // });
             
 
-        </script>
-    </body>
-</html>
+        </script> -->
 {% endblock %} 

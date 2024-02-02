@@ -13,19 +13,23 @@
                 <tbody>
                     {% for row in challenges %}
                     <tr>
+                       
                       <div id="partic_buttons">
                         <td>
-                            <button id = "participate-{{row.challenge_id}}">Participate</button>
+                            <button id = "participate-{{row.challenge_id}}" class ="Participation_button">Participate</button>
                         </td>
                         </div>
                         <div>
-                        <td>{{ row.title }}</td>  
+                        <td>{{ row.title }}</td>    
                         </div>
+                       
                     </tr>
                     {% endfor %}
                 </tbody>
               </table>
           </div>
+
+          <!-- implement this for better show? -->
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>

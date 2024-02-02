@@ -27,8 +27,6 @@ const buttonPressed = (e) => {
   console.log(id);
   if (e.target.innerText == "Participate") {
     e.target.innerText = "Joined";
-  } else if (e.target.innerText == "Joined") {
-    e.target.innerText = "Participate";
   }
 
   // Get ID of Clicked Element

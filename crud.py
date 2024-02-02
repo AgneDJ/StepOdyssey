@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Friends, Steps, ChatBox, Challenges, Achievements, UserChallenges, UserAchievements, Message, FriendRequest, connect_to_db
+from model import db, User, Friends, Steps, Challenges, Achievements, UserChallenges, UserAchievements, FriendRequest, connect_to_db
 from sqlalchemy import insert, or_, and_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
@@ -8,11 +8,11 @@ import os
 from datetime import date
 
 
-def create_user(name, email, password):
+def create_user(name, email, token):
     """Create and return a new user."""
 
     user = User(user_name=name, user_email=email,
-                user_password=password, refresh_token="")
+                refresh_token="", user_password="", user_avatar="")
 
     return user
 

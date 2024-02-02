@@ -35,7 +35,8 @@ def get_google_provider_cfg():
 @app.route("/")
 def homepage():
     """View homepage."""
-    # name = request.args.get('user_name')
+    if "user_email" in session:
+        return redirect("/profile")
     return render_template("homepage.html")
 
 
@@ -58,17 +59,36 @@ def rendering_profile():
         daily_total = user.steps[-1].daily_total
 
     now = datetime.now()
+    print("     ---------THIS IS START")
+    daystart = datetime(year=now.year, month=now.month,
+                        day=now.day, hour=0, second=0)
+    print(" -----------THIS IS END")
+    print(daystart)
+    end_of_day = datetime(year=now.year, month=now.month,
+                          day=now.day, hour=23, minute=59, second=59)
+    print(end_of_day)
+
     user_challenges = []
+
     print('ppppppppppppppppppp')
     for challenge in user.user_challenges:
-        duration = now-challenge.end_time
+        duration = now - end_of_day
+        status_of_challenge = None
+        if now == challenge.end_time:
+            status_of_challenge = "Over"
+            duration = None
+        else:
+            status_of_challenge = "In progress"
+
         user_challenges.append({
             'user_challenge': challenge,
-            'duration': humanize.naturaltime(duration)
+            'duration': humanize.naturaltime(duration),
+            'status': status_of_challenge,
         })
+
     # achievement adding process
     # lifetime_steps = crud.lifetime_steps(user.user_id)
-    lifetime_steps = 10000
+    lifetime_steps = 1000000
     all_achievements = crud.get_achievements()
     user_achievements = crud.get_user_achievements(user.user_id)
 
@@ -91,56 +111,11 @@ def rendering_profile():
     user_achievements = crud.get_user_achievements(user.user_id)
     print("------------")
     print(user_achievements)
-    return render_template("profile.html", has_friend_requests=has_friend_requests, name=user.user_name, date=date, daily_total=daily_total, user_achievements=user_achievements, achievement_image=achievement_image, user_challenges=user_challenges, lifetime_steps=lifetime_steps)
+    userid = user.user_id
+    friends = crud.get_friends(userid)
+    friends_list = crud.get_users_by_ids(friends)
 
-
-@app.route("/signup")
-def show_register_user():
-    return render_template("signin.html")
-
-
-@app.route("/signup", methods=["POST"])
-def register_user():
-    """Register user."""
-
-    name = request.form.get("name")
-    email = request.form.get("email")
-    password = request.form.get("password")
-    print('ddddddddddd'+name)
-
-    user = crud.get_user_by_email(email)
-
-    if user:
-        flash("Cannot create an account with that email. Try again.")
-        return redirect("/signup")
-    else:
-        user = crud.create_user(name, email, password)
-        db.session.add(user)
-        db.session.commit()
-        flash("Account created! Please log in.")
-
-    return redirect("/")
-
-
-@app.route("/login", methods=["POST"])
-def logging_in():
-    """Logging user in."""
-
-    email = request.form.get("email")
-    password = request.form.get("password")
-    print(email, password)
-
-    user = crud.get_user_by_email(email)
-    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    print(user)
-# sup
-    if not user or user.user_password != password:
-        flash("Email or password are incorrect, my friend.")
-        return redirect("/")
-    else:
-        session["user_email"] = user.user_email
-        flash(f"Hey there, {user.user_email}, what's up?")
-    return redirect("/profile")
+    return render_template("profile.html", has_friend_requests=has_friend_requests, user=user, date=date, daily_total=daily_total, user_achievements=user_achievements, achievement_image=achievement_image, user_challenges=user_challenges, lifetime_steps=lifetime_steps, friends_list=friends_list)
 
 
 @app.route("/login/google")
@@ -195,20 +170,22 @@ def login_oauth():
     print("lllllllllllll")
     print(userinfo_response)
     email = userinfo_response['email']
+    picture = userinfo_response['picture']
+
+    print("hhhhhhhhhhhhhhhhhhhhhhhhhh___hhhhh")
+
     # user from db
     # no user - register
     # yes user - continue
     # set session
     user = crud.get_user_by_email(email)
-
     if not user:
         user = crud.create_user(userinfo_response['given_name'], email, "")
-        db.session.add(user)
-        db.session.commit()
 
     session["user_email"] = user.user_email
 
     user.refresh_token = refresh_token
+    user.user_avatar = picture
     db.session.add(user)
     db.session.commit()
 
@@ -376,7 +353,14 @@ def remove_friend():
 def challenges():
     """View challenges list."""
     challenges = crud.get_challenges()
-
+    if "user_email" not in session:
+        return redirect("/")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
     return render_template("challenges.html", challenges=challenges)
 
 
@@ -415,7 +399,14 @@ def join_challenges():
 def leaderboard():
     """View leaderboard."""
     leaders = crud.get_leader()
-
+    if "user_email" not in session:
+        return redirect("/")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
     return render_template("leaderboard.html", leaders=leaders)
 
 
@@ -423,6 +414,14 @@ def leaderboard():
 def achievements():
     """View achievements."""
     achievements = crud.get_achievements()
+    if "user_email" not in session:
+        return redirect("/")
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
     return render_template("achievements.html", achievements=achievements)
 
 
@@ -440,6 +439,15 @@ def sync():
     print(update_steps(user.user_id))
 
     return redirect("/profile")
+
+
+@app.route("/logout")
+def logout():
+    email = session["user_email"]
+    if "user_email" in session:
+        del session["user_email"]
+
+    return redirect("/")
 
 
 def fetch_steps(token):
