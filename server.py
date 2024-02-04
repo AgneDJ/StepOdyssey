@@ -128,9 +128,11 @@ def rendering_profile():
     print(user_achievements)
     userid = user.user_id
     friends = crud.get_friends(userid)
+    friends_challenges = []
     friends_list = crud.get_users_by_ids(friends)
+    has_invites = crud.has_invites(user.user_id)
 
-    return render_template("profile.html", has_friend_requests=has_friend_requests, user=user, date=date, daily_total=daily_total, user_achievements=user_achievements, achievement_image=achievement_image, user_challenges=user_challenges, lifetime_steps=lifetime_steps, friends_list=friends_list)
+    return render_template("profile.html", has_friend_requests=has_friend_requests, has_invites=has_invites, user=user, date=date, daily_total=daily_total, user_achievements=user_achievements, achievement_image=achievement_image, user_challenges=user_challenges, lifetime_steps=lifetime_steps, friends_list=friends_list)
 
 
 @app.route("/login/google")
@@ -299,7 +301,6 @@ def friend_request():
 
 @app.route("/friends/invite", methods=["POST"])
 def friend_invite():
-    new_friend = request.get_json()["friend"]
     if "user_email" not in session:
         return redirect("/"), 401
     user = crud.get_user_by_email(session["user_email"])
@@ -308,16 +309,10 @@ def friend_invite():
         del session["user_email"]
         return "{}", 401
 
-    crud.invite_to_challenge(sender=user.user_id, receiver=new_friend)
-
-    # send a request to an existing friend
-    # check if there is a request from  existing friend
-    # check if user has same challenge in his user_challenges.
-    # accept button
-    # If not - add
-    # pass user name and user_challenge by challenge progress to profile.html
-    # check if this friend is in your friends list
-    #
+    new_friend = request.get_json()["friend"]
+    challenge_id = request.get_json()["challenge_id"]
+    crud.invite_to_challenge(
+        sender=user.user_id, receiver=new_friend, challenge_id=challenge_id)
 
     return "{}"
 
@@ -357,21 +352,6 @@ def add_friend():
     crud.delete_friend_req(sender=friend_id, receiver=user.user_id)
     return "{}"
 
-    # if "user_email" not in session:
-    #     return redirect("/")
-    # email = session["user_email"]
-    # user = crud.get_user_by_email(email)
-    # # checking if user exists
-    # if not user:
-    #     del session["user_email"]
-    #     return "{}", 401
-
-    # # id = request.get_json()['friend_id']
-    # crud.make_friend(id, user)
-    # crud.delete_friend_req(sender=friend_id, receiver=user.user_id)
-
-    return "{}"
-
 
 @app.route("/friends/removing_friends", methods=["POST"])
 def remove_friend():
@@ -407,36 +387,43 @@ def challenges():
     for user_challenge in user_challenges:
         user_challenges_by_id[user_challenge.challenge_id] = user_challenge
 
-    # checking if user exists
+    requests_for_challenge = []
+    all_challenge_invites = crud.challenge_invites(user_id)
+    for invite in all_challenge_invites:
+        challenge = crud.get_challenge_by_id(invite.challenge_id)
+        sender = crud.get_user_by_id(invite.sender)
+        requests_for_challenge.append(
+            {"challenge": challenge, "sender": sender})
+    # get all has_invites
+    # for each inv find challenge and sender
+    # create dict and pass to jinja
 
-    # all usr ch
-    # all active ch
-    # if exist in user ch show progress from
-    # cout challenge completness
-    return render_template("challenges.html", challenges=challenges, user_challenges_by_id=user_challenges_by_id)
+    return render_template("challenges.html", challenges=challenges, user_challenges_by_id=user_challenges_by_id, requests_for_challenge=requests_for_challenge)
 
 
 @app.route("/challenges", methods=["POST"])
 def join_challenges():
-
-    challenge_id = request.get_json()
-    print(challenge_id)
-    challenge_data = crud.get_challenge_by_id(challenge_id['id'])
-
-    challenge_data.title
-    challenge_data.duration
-    challenge_data.total_to_compete
-    start_time = datetime.now()
-    # challenge_id={self.challenge_id} title={self.title} duration={self.duration} total_to_compete={self.total_to_compete}
-    user = crud.get_user_by_email(session['user_email'])
+    if "user_email" not in session:
+        return redirect("/"), 401
+    email = session["user_email"]
+    user = crud.get_user_by_email(email)
     if not user:
-        return "User not found", 400
+        del session["user_email"]
+        return "{}", 401
+
+    challenge_id = request.get_json()['id']
+    print(challenge_id)
+    challenge_data = crud.get_challenge_by_id(challenge_id)
+    start_time = datetime.now()
 
     user_challenge = crud.add_data_to_user_challenges(
         user.user_id, challenge_data.challenge_id, start_time, start_time+timedelta(hours=challenge_data.duration), False)
 
     db.session.add(user_challenge)
     db.session.commit()
+
+    crud.delete_all_challenge_invites(user.user_id, challenge_id)
+
     # add data to that table
     resp = {
         'status': 'hell yeah',
@@ -500,6 +487,24 @@ def logout():
     return redirect("/")
 
 
+@app.route("/cancel", methods=["POST"])
+def cancel_invite():
+
+    challenge_id = request.get_json()["id"]
+    if "user_email" not in session:
+        return redirect("/"), 401
+    user = crud.get_user_by_email(session["user_email"])
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    crud.delete_all_challenge_invites(
+        receiver=user.user_id, challenge_id=challenge_id)
+
+    return "{}"
+
+
 def fetch_steps(token):
     today = date.today()
     today = date(today.year, today.month, today.day)
@@ -507,7 +512,6 @@ def fetch_steps(token):
         today, datetime.min.time()).timestamp()
     end_time = datetime.combine(
         today, datetime.max.time()).timestamp()
-    # TODO:  put in fitnessrequest calculation to start day from specific day (and end)
     req = FitnessRequest(start_time, end_time)
     headers = {
         "Content-Type": "application/json;encoding=utf-8",

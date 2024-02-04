@@ -1,6 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
       <div class="col-sm">
+        {% if requests_for_challenge %}
+            <table class="table table-dark">
+                <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for request in requests_for_challenge %}
+                        <th scope="col">{{request["sender"].user_name}} has invited you to a {{request["challenge"].title}}
+                            <div id="accept_buttons">
+                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="accept-{{request["challenge"].challenge_id}}" type="submit">Accept</button></td>
+                            </div>
+                            <div id="remove_buttons">
+                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id = "remove-{{request["challenge"].challenge_id}}" type="submit">Cancel</button></td>
+                            </div>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
             <table class="table table-dark">
                 <thead>
                   <tr>
@@ -65,4 +89,87 @@
             </a>
         </div>
             <script src="/static/parc_buttons.js"></script>
+            <script>
+                const add_buttons = document.getElementsByTagName("button");
+
+                const acceptEvent = (e) => {
+                let id = Number(e.target.id.replace("accept-", ""));
+                console.log(id);
+
+                fetch("https://127.0.0.1:5000/challenges", {
+                    method: "POST",
+                    headers: {
+                    "Content-type": "application/json",
+                    Accept: "application/json",
+                    },
+                    body: JSON.stringify({ id: id }),
+                })
+                    .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        alert("Something is wrong");
+                    }
+                    })
+                    .then((jsonResponse) => {
+                    // Log the response data in the console
+                    console.log(jsonResponse);
+
+                    // TODO: change after checking if response was ok
+                    console.log(id);
+                    if (e.target.innerText == "Accept") {
+                        e.target.innerText = "Accepting";
+                    }
+                    location.reload();
+                    })
+                    .catch((err) => console.error(err));
+
+                // Get ID of Clicked Element
+                };
+                for (let btn of add_buttons) {
+                    if (btn.id.startsWith("accept-")) btn.addEventListener("click", acceptEvent);
+             }
+            </script>
+
+            <script>
+                const cancel_buttons = document.getElementsByTagName("button");
+
+                const cancelEvent = (e) => {
+                let id = Number(e.target.id.replace("remove-", ""));
+                console.log(id);
+
+                fetch("https://127.0.0.1:5000/cancel", {
+                    method: "POST",
+                    headers: {
+                    "Content-type": "application/json",
+                    Accept: "application/json",
+                    },
+                    body: JSON.stringify({ id: id }),
+                })
+                    .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        alert("Something is wrong");
+                    }
+                    })
+                    .then((jsonResponse) => {
+                    // Log the response data in the console
+                    console.log(jsonResponse);
+
+                    // TODO: change after checking if response was ok
+                    console.log(id);
+                    if (e.target.innerText == "Cancel") {
+                        e.target.innerText = "Removing";
+                    }
+                    location.reload();
+                    })
+                    .catch((err) => console.error(err));
+
+                // Get ID of Clicked Element
+                };
+                for (let btn of cancel_buttons) {
+                    if (btn.id.startsWith("remove-")) btn.addEventListener("click", cancelEvent);
+            }
+            </script>
 {% endblock %}

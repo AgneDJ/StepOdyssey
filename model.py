@@ -89,6 +89,18 @@ class FriendRequest(db.Model):
         "user_data.user_id"), primary_key=True)
 
 
+class ChallengeRequest(db.Model):
+    """Challenge request data."""
+    __tablename__ = "challenge_request"
+
+    receiver = db.Column(db.Integer, db.ForeignKey(
+        "user_data.user_id"), primary_key=True)
+    sender = db.Column(db.Integer, db.ForeignKey(
+        "user_data.user_id"), primary_key=True)
+    challenge_id = db.Column(
+        db.Integer, db.ForeignKey("challenges.challenge_id"))
+
+
 # class Message(db.Model):
 #     """A message data."""
 

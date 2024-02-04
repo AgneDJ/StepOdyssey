@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Friends, Steps, Challenges, Achievements, UserChallenges, UserAchievements, FriendRequest, connect_to_db
+from model import db, User, Friends, Steps, Challenges, Achievements, UserChallenges, UserAchievements, FriendRequest, ChallengeRequest, connect_to_db
 from sqlalchemy import insert, or_, and_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
@@ -113,18 +113,6 @@ def add_data_to_user_challenges(user_id, challenge_id, start_time, end_time, com
     db.session.commit()
     return user_challenges
 
-# do I need a commit?
-
-
-# def add_data_to_user_achievements(user_id, achievements_id, date):
-#     """Adds achievements to personal db"""
-#     user_achievements = UserAchievements(user_id=user_id, achievements_id=achievements_id,
-#                                          date=date)
-#     db.session.add(user_achievements)
-#     db.session.commit()
-
-#     return user_achievements
-
 
 def get_achievement_img(achievement_id):
     """Gets achievements image url by achievement id"""
@@ -200,8 +188,39 @@ def lose_friend(sender, receiver):
 
     return destroy_friendship
 
-    def invite_to_challenge(sender, receiver):
-        """Invite friend to a challenge."""
+
+def invite_to_challenge(sender, receiver, challenge_id):
+    """Invite friend to a challenge."""
+
+    challenge_invitation = ChallengeRequest(
+        sender=sender, receiver=receiver, challenge_id=challenge_id)
+    db.session.merge(challenge_invitation)
+    db.session.commit()
+
+
+def challenge_invites(user_id):
+    """Return all invites to a challenges."""
+
+    return ChallengeRequest.query.filter(
+        ChallengeRequest.receiver == user_id).all()
+
+
+def delete_all_challenge_invites(receiver, challenge_id):
+    """Delete all invitations for challenge"""
+
+    challenge_invitation = ChallengeRequest.query.filter(
+        ChallengeRequest.receiver == receiver, ChallengeRequest.challenge_id == challenge_id).all()
+    for invite in challenge_invitation:
+        db.session.delete(invite)
+    db.session.commit()
+
+
+def has_invites(user_id):
+    """Return boolean if there are any invites."""
+
+    invites = ChallengeRequest.query.filter(
+        ChallengeRequest.receiver == user_id).first()
+    return invites is not None
 
 
 def get_friend_req(sender, receiver):
@@ -226,15 +245,6 @@ def get_friend_rec(receiver):
     return request
 
 
-# achievements--------------------------
-# def add_user_achievements(user_id, achievement_id, date, image):
-#     """Adds achievements data to db"""
-#     user_achievements = UserAchievements(user_id=user_id, achievement_id=achievement_id,
-#                                          date=date, image=image)
-
-#     return user_achievements
-
-
 def get_leader():
     """Return most active users."""
 
@@ -242,11 +252,4 @@ def get_leader():
     query = Steps.query.filter(Steps.date == today).order_by(
         Steps.daily_total.desc()).limit(10).all()
 
-    # hmmmmmm NEED USER NAME
-
     return query
-
-# if __name__ == "__main__":
-#     from server import app
-
-#     connect_to_db(app)

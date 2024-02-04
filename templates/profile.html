@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% include 'friend_request.html' %}
+{% include 'Invite_to_challenge.html' %}
 {% block content %}
      
         Hi {{user.user_name}}! Welcome to Step Odyssey!
@@ -65,22 +66,36 @@
                     <div class="col-sm-1">
                     <div class="col-sm-1"></div><p>{{row['status']}}</p></div> 
                     {% for user in friends_list %}
-                    <div class="col-sm-1"><div class="dropdown">
-                        <button class="dropbtn">Invite Friends</button>
-                         
+                        {% if row['status'] == "In progress" %}
+                        <div class="col-sm-1"><div class="dropdown">
+                            <button class="dropbtn">Invite Friends</button>
                             <div class="dropdown-content">
-                                <a href="#">{{user}}</a>
-                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="inviting-{{user.user_id}}" type="submit">Invite</button></td>
+                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="inviting-{{user.user_id}}-{{row['user_challenge'].challenges.challenge_id}}" type="submit"><a href="#">{{user.user_name}}</a></button></td>
                             </div>
-                    </div>
-                    {% include 'invite_friend_to_challenge.html' %}
-                {% endfor %}
+                        </div>
+                        {% endif %}
+                        <table class="table table-dark">
+                            <thead>
+                              <tr>
+                                <th scope="col">Friend</th>
+                                <th scope="col">Progress</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="col">friends_name</th>
+                                    <th scope="col">friends_progress    </th>
+
+                                    <!-- friends name and steps  -->
+                                    <!-- join button not permanent -->
+                                    <!-- more steps sync -->
+                                  </tr>
+                            </tbody>
+                        </table>
+                    {% endfor %}
                 </div>  
                 {% endfor %}  
                   
-                    <!-- in server check if completed or in progress and then pass it here to jinja -->
-                    
-        
                 </div>  
             </div>
         </div>
