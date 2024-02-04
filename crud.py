@@ -5,7 +5,7 @@ from sqlalchemy import insert, or_, and_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
 import os
-from datetime import date
+from datetime import date, datetime
 
 
 def create_user(name, email, token):
@@ -65,6 +65,13 @@ def get_user_by_password(password):
     """Return a user by password."""
 
     return User.query.filter(User.password == password).first()
+
+
+def get_user_challenges(user_id):
+    """Return all user_challenges."""
+
+    now = datetime.now()
+    return UserChallenges.query.filter(UserChallenges.end_time >= now, UserChallenges.user_id == user_id).all()
 
 
 def get_challenges():
@@ -192,6 +199,9 @@ def lose_friend(sender, receiver):
     db.session.commit()
 
     return destroy_friendship
+
+    def invite_to_challenge(sender, receiver):
+        """Invite friend to a challenge."""
 
 
 def get_friend_req(sender, receiver):

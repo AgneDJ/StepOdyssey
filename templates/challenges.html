@@ -11,16 +11,24 @@
                   </tr>
                 </thead>
                 <tbody>
-                    {% for row in challenges %}
+                    {% for challenge in challenges %}
                     <tr>
-                       
-                      <div id="partic_buttons">
+                    
+                    {% if challenge.challenge_id in user_challenges_by_id %}
+                    <div id="partic_buttons">
                         <td>
-                            <button id = "participate-{{row.challenge_id}}" class ="Participation_button">Participate</button>
+                            Joined
                         </td>
-                        </div>
+                    </div>
+                    {% else %}
+                    <div id="partic_buttons">
+                        <td>
+                            <button id = "participate-{{challenge.challenge_id}}" class ="Participation_button">Participate</button>
+                        </td>
+                    </div>
+                    {% endif %}
                         <div>
-                        <td>{{ row.title }}</td>    
+                        <td>{{ challenge.title }}</td>    
                         </div>
                        
                     </tr>

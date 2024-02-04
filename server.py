@@ -61,29 +61,44 @@ def rendering_profile():
     now = datetime.now()
     print("     ---------THIS IS START")
     daystart = datetime(year=now.year, month=now.month,
-                        day=now.day, hour=0, second=0)
+                        day=now.day)
+    daynext = datetime(year=now.year, month=now.month,
+                       day=now.day+1)
     print(" -----------THIS IS END")
     print(daystart)
-    end_of_day = datetime(year=now.year, month=now.month,
-                          day=now.day, hour=23, minute=59, second=59)
-    print(end_of_day)
 
     user_challenges = []
-
+    challenges = crud.get_challenges()
     print('ppppppppppppppppppp')
+    complete = "In progress"
+    status_of_challenge = "None"
     for challenge in user.user_challenges:
-        duration = now - end_of_day
-        status_of_challenge = None
-        if now == challenge.end_time:
+        progress = challenge.challenges.total_to_compete-daily_total
+        start = challenge.start_time
+        challenge_date = datetime(year=start.year, month=start.month,
+                                  day=start.day)
+
+        if challenge_date < daystart and progress > 0:
+            complete = "You lost..."
             status_of_challenge = "Over"
-            duration = None
+            duration = now - start
+
+        elif challenge_date < daystart and progress < 0:
+            complete = "Hurray! You made it!"
+            status_of_challenge = "Over"
+            duration = start - daynext
+
         else:
+            complete = "Getting there"
             status_of_challenge = "In progress"
+            duration = start - daynext
 
         user_challenges.append({
             'user_challenge': challenge,
             'duration': humanize.naturaltime(duration),
             'status': status_of_challenge,
+            'progress': progress,
+            'complete': complete,
         })
 
     # achievement adding process
@@ -282,6 +297,31 @@ def friend_request():
     return "{}"
 
 
+@app.route("/friends/invite", methods=["POST"])
+def friend_invite():
+    new_friend = request.get_json()["friend"]
+    if "user_email" not in session:
+        return redirect("/"), 401
+    user = crud.get_user_by_email(session["user_email"])
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    crud.invite_to_challenge(sender=user.user_id, receiver=new_friend)
+
+    # send a request to an existing friend
+    # check if there is a request from  existing friend
+    # check if user has same challenge in his user_challenges.
+    # accept button
+    # If not - add
+    # pass user name and user_challenge by challenge progress to profile.html
+    # check if this friend is in your friends list
+    #
+
+    return "{}"
+
+
 @app.route("/friends/notadding", methods=["POST"])
 def delete_request():
     friend_id = request.get_json()["friend"]
@@ -352,16 +392,28 @@ def remove_friend():
 @app.route("/challenges")
 def challenges():
     """View challenges list."""
-    challenges = crud.get_challenges()
     if "user_email" not in session:
-        return redirect("/")
+        return redirect("/"), 401
     email = session["user_email"]
     user = crud.get_user_by_email(email)
-    # checking if user exists
     if not user:
         del session["user_email"]
         return "{}", 401
-    return render_template("challenges.html", challenges=challenges)
+
+    user_id = user.user_id
+    user_challenges = crud.get_user_challenges(user_id)
+    challenges = crud.get_challenges()
+    user_challenges_by_id = {}
+    for user_challenge in user_challenges:
+        user_challenges_by_id[user_challenge.challenge_id] = user_challenge
+
+    # checking if user exists
+
+    # all usr ch
+    # all active ch
+    # if exist in user ch show progress from
+    # cout challenge completness
+    return render_template("challenges.html", challenges=challenges, user_challenges_by_id=user_challenges_by_id)
 
 
 @app.route("/challenges", methods=["POST"])
@@ -427,8 +479,6 @@ def achievements():
 
 @app.route("/sync")
 def sync():
-    # ar yra useris
-    # ar prijungtas
     print("iiiiiiiiiiiiiiiiiiixxxxxxx")
     email = session["user_email"]
     user = crud.get_user_by_email(email)
