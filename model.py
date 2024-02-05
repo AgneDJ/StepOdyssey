@@ -54,7 +54,8 @@ class Steps(db.Model):
     __tablename__ = "steps"
 
     # steps_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        "user_data.user_id"), primary_key=True)
     daily_total = db.Column(db.Integer, default=0)
     date = db.Column(db.DateTime, primary_key=True)
 

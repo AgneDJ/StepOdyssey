@@ -245,6 +245,31 @@ def get_friend_rec(receiver):
     return request
 
 
+def if_joined(user_id, challenge_id):
+    joined = UserChallenges.query.filter(UserChallenges.user_id == user_id,
+                                         UserChallenges.challenge_id == challenge_id, UserChallenges.end_time >= datetime.now()).first()
+    return joined is not None
+
+
+def get_users_challenges(friends_list, challenge_id):
+    user_challenges = []
+    for friend in friends_list:
+        user_challenge = UserChallenges.query.filter(UserChallenges.user_id == friend.user_id,
+                                                     UserChallenges.challenge_id == challenge_id, UserChallenges.end_time >= datetime.now()).first()
+        if user_challenge is not None:
+            user_challenges.append(user_challenge)
+
+    return user_challenges
+
+
+def get_steps_by_date(user_id, date):
+    steps_by_date = Steps.query.filter(
+        Steps.user_id == user_id, Steps.date == datetime.date(date)).first()
+    if steps_by_date is None:
+        return 0
+    return steps_by_date.daily_total
+
+
 def get_leader():
     """Return most active users."""
 
@@ -252,4 +277,6 @@ def get_leader():
     query = Steps.query.filter(Steps.date == today).order_by(
         Steps.daily_total.desc()).limit(10).all()
 
+    # all_users = User.query.filter(Steps.date == datetime.now()).order_by(
+    #     Steps.daily_total.desc()).limit(10).all()
     return query

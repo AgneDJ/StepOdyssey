@@ -52,11 +52,8 @@ def rendering_profile():
         del session["user_email"]
         return redirect("/")
 
-    date = None
-    daily_total = None
-    if len(user.steps) != 0:
-        date = user.steps[-1].date.date()
-        daily_total = user.steps[-1].daily_total
+    daily_total = crud.get_steps_by_date(
+        user.user_id, datetime.now())
 
     now = datetime.now()
     print("     ---------THIS IS START")
@@ -67,13 +64,18 @@ def rendering_profile():
     print(" -----------THIS IS END")
     print(daystart)
 
+    friends = crud.get_friends(user.user_id)
+    friends_list = crud.get_users_by_ids(friends)
+
     user_challenges = []
     challenges = crud.get_challenges()
     print('ppppppppppppppppppp')
     complete = "In progress"
     status_of_challenge = "None"
     for challenge in user.user_challenges:
-        progress = challenge.challenges.total_to_compete-daily_total
+        # get steps from day of end_time instead of daily total
+        steps = crud.get_steps_by_date(user.user_id, challenge.start_time)
+        progress = challenge.challenges.total_to_compete-steps
         start = challenge.start_time
         challenge_date = datetime(year=start.year, month=start.month,
                                   day=start.day)
@@ -86,12 +88,25 @@ def rendering_profile():
         elif challenge_date < daystart and progress < 0:
             complete = "Hurray! You made it!"
             status_of_challenge = "Over"
-            duration = start - daynext
+            duration = now - start
+            progress = "(+extra)" + str(steps-challenge.challenges.total_to_compete
+                                        )
 
         else:
             complete = "Getting there"
             status_of_challenge = "In progress"
             duration = start - daynext
+
+        friends_challenges = crud.get_users_challenges(
+            friends_list, challenge.challenge_id)
+        friends_state = []
+        for challenge in friends_challenges:
+            steps = crud.get_steps_by_date(
+                challenge.user_id, datetime.now())
+            friends_state.append({
+                'friend': challenge.user,
+                'steps': steps
+            })
 
         user_challenges.append({
             'user_challenge': challenge,
@@ -99,11 +114,13 @@ def rendering_profile():
             'status': status_of_challenge,
             'progress': progress,
             'complete': complete,
+            'friends': friends_state,
         })
+    user_challenges.reverse()
 
     # achievement adding process
-    # lifetime_steps = crud.lifetime_steps(user.user_id)
-    lifetime_steps = 1000000
+    lifetime_steps = crud.lifetime_steps(user.user_id)
+    # lifetime_steps = 1000000
     all_achievements = crud.get_achievements()
     user_achievements = crud.get_user_achievements(user.user_id)
 
@@ -125,14 +142,21 @@ def rendering_profile():
 
     user_achievements = crud.get_user_achievements(user.user_id)
     print("------------")
-    print(user_achievements)
-    userid = user.user_id
-    friends = crud.get_friends(userid)
-    friends_challenges = []
-    friends_list = crud.get_users_by_ids(friends)
+    print(friends_state)
+
     has_invites = crud.has_invites(user.user_id)
 
-    return render_template("profile.html", has_friend_requests=has_friend_requests, has_invites=has_invites, user=user, date=date, daily_total=daily_total, user_achievements=user_achievements, achievement_image=achievement_image, user_challenges=user_challenges, lifetime_steps=lifetime_steps, friends_list=friends_list)
+    return render_template("profile.html",
+                           has_friend_requests=has_friend_requests,
+                           has_invites=has_invites,
+                           user=user,
+                           date=datetime.date(now),
+                           daily_total=daily_total,
+                           user_achievements=user_achievements,
+                           achievement_image=achievement_image,
+                           user_challenges=user_challenges,
+                           lifetime_steps=lifetime_steps,
+                           friends_list=friends_list)
 
 
 @app.route("/login/google")
@@ -416,13 +440,18 @@ def join_challenges():
     challenge_data = crud.get_challenge_by_id(challenge_id)
     start_time = datetime.now()
 
+    crud.delete_all_challenge_invites(user.user_id, challenge_id)
+
+    # todo are we joined yet?
+    is_joined = crud.if_joined(user.user_id, challenge_id)
+    if is_joined:
+        return "{}"
+
     user_challenge = crud.add_data_to_user_challenges(
         user.user_id, challenge_data.challenge_id, start_time, start_time+timedelta(hours=challenge_data.duration), False)
 
     db.session.add(user_challenge)
     db.session.commit()
-
-    crud.delete_all_challenge_invites(user.user_id, challenge_id)
 
     # add data to that table
     resp = {
@@ -442,6 +471,9 @@ def leaderboard():
         return redirect("/")
     email = session["user_email"]
     user = crud.get_user_by_email(email)
+
+    # user_steps = crud.get_steps()
+    # print(user_steps)
     # checking if user exists
     if not user:
         del session["user_email"]

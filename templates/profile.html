@@ -19,81 +19,110 @@
         </form>
         <div class="container">
 
-            <div class="row">
-                <div class="col-sm-3">User</div>
-                <div class="col-sm-3"></div>
-                <div class="col-sm-3">Daily Total Steps</div>
-                <div class="col-sm-3">Lifetime Steps</div>
-              </div>
-              <div class="row">
-                <div class="col-sm"></div>
-                <div class="col-sm"></div>
-                <div class="col-sm">{{date}} - {{daily_total}}</div>
-                <div class="col-sm">{{lifetime_steps}}</div>
-              </div>
-            </div>
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Daily Total Steps</th>
+                        <th scope="col">Lifetime Steps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="col">{{date}} - {{daily_total}}</td>
+                        <td scope="col">{{lifetime_steps}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="container">
-           
             {% if user_achievements %}
             <div class="row">
-                <div class="col-sm-6"><h1>Your achievements</h1></div>
-                <div class="col-sm-6"></div>
-                {% for user_achievement in user_achievements %}
-                <div class="col-sm-2"><img src={{user_achievement.achievements.image}} class="rounded-circle shadow-4" style="width: 100px;" alt="Achievements image">
-                    <br>
-                <div class="col-sm-7">{{user_achievement.achievements.title}}</div>
+                <br>
+                <h1>Your achievements</h1>
+                <br>
             </div>
-                {% endfor %}
-            
-            {% endif %} 
-              <div class="col-sm-14"><h1>Your challenges</h1></div>
+            <div class="row">
+                <div id = "Achievements"></div>
+                    <table class="table table-dark">
+                        <thead>
+                            {% for user_achievement in user_achievements %}
+                            <tr>
+                                <td scope="col"><img src={{user_achievement.achievements.image}} class="rounded-circle shadow-4" style="width: 100px;" alt="Achievements image"></td>
+                                <td scope="col">{{user_achievement.achievements.title}}</td>
+                            </tr>
+                            {% endfor %}
+                        </thead>
+                    </table>
+            {% endif %}
+        </div> 
+
+        <div class="container">
                 <div class="row">
-                    <div class="col-sm-14">Title</div>
-                    <!-- <div class="col-sm-1">Duration</div>
-                    <div class="col-sm-1">Goal</div> -->
-                    <div class="col-sm-1">Duration</div>
-                    <div class="col-sm-1">Invite</div>
-                    <div class="col-sm-1">status?</div>
+                    <br>
+                    <h1>Your Challenges</h1>
+                    <br>
                 </div>
-                    {% for row in user_challenges %}
-                <div class="row">
-                    <div class="col-sm-1">{{row['user_challenge'].challenges.title}}</div>
-                    <div class="col-sm-1">{{row['progress']}}</div>
-                    <div class="col-sm-1">{{row['complete']}}</div>
-                    <!-- <div class="col-sm-1">{{row['user_challenge'].challenges.duration}}</div>
-                    <div class="col-sm-1">{{row['user_challenge'].challenges.total_to_compete}}</div> -->
-                    <div class="col-sm-1">{{row['duration']}}</div>
-                    <div class="col-sm-1">
-                    <div class="col-sm-1"></div><p>{{row['status']}}</p></div> 
+                <div id = "Challenges">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Progress</th>
+                                <th scope="col">Position</th>
+                                <th scope="col">Duration</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Invite</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in user_challenges %}
+                            <tr>
+                                <td scope="col">{{row['user_challenge'].challenges.title}}</td>
+                                <td scope="col">{{row['progress']}}</td>
+                                <td scope="col">{{row['complete']}}</td>
+                                <td scope="col">{{row['duration']}}</td>
+                                <td scope="col">{{row['status']}}</td>
+                            </tr>
+                        </tbody>
+                    </table> 
+                    <br>
+                    <div>
                     {% for user in friends_list %}
                         {% if row['status'] == "In progress" %}
-                        <div class="col-sm-1"><div class="dropdown">
-                            <button class="dropbtn">Invite Friends</button>
-                            <div class="dropdown-content">
-                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="inviting-{{user.user_id}}-{{row['user_challenge'].challenges.challenge_id}}" type="submit"><a href="#">{{user.user_name}}</a></button></td>
+                        <td scope="col">
+                        <div class="col-sm-1">
+                            <div class="dropdown">
+                                <button class="dropbtn">Invite Friends</button>
+                                <div class="dropdown-content">
+                                    <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="inviting-{{user.user_id}}-{{row['user_challenge'].challenges.challenge_id}}" type="submit"><a href="#">{{user.user_name}}</a></button></td>
+                                </div>
                             </div>
                         </div>
                         {% endif %}
-                        <table class="table table-dark">
-                            <thead>
-                              <tr>
+                        </td>
+                    </div>
+                    <br>
+                        {% if row['friends'] %}
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
                                 <th scope="col">Friend</th>
                                 <th scope="col">Progress</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="col">friends_name</th>
-                                    <th scope="col">friends_progress    </th>
-
-                                    <!-- friends name and steps  -->
-                                    <!-- join button not permanent -->
-                                    <!-- more steps sync -->
-                                  </tr>
-                            </tbody>
-                        </table>
-                    {% endfor %}
-                </div>  
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for state in row['friends'] %}
+                            <tr>
+                                <td scope="col">{{state['friend'].user_name}}</td>
+                                <td scope="col">{{state['steps']}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                        {% endif %}
+                            {% endfor %}
+                    </div>  
                 {% endfor %}  
                   
                 </div>  
