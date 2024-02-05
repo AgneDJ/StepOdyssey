@@ -15,7 +15,7 @@ import datetime as dt
 from jinja2 import StrictUndefined
 
 app = Flask(__name__)
-app.secret_key = "dev"
+app.secret_key = os.environ.get("APP_SECRET_KEY", None)
 app.jinja_env.undefined = StrictUndefined
 
 # TODO: crash if empty
