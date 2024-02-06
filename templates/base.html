@@ -1,53 +1,65 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Step Odyssey</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="icon" type="image/x-icon" href="static/img/dalee_image.png">
-        <title>{% block title %}My Website{% endblock %}</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+                    <!-- <title>{% block title %}My Website{% endblock %}</title> -->
         <link rel="stylesheet" href="static/css/styles.css">
-        <div class="Oddys">
-            <style>
-                body {
-                background-image: url('static/img/step_img.jpeg');
-                background-repeat: no-repeat;
-                background-attachment: fixed;  
-                background-size: cover;
-                background-blend-mode: Chrome 35;
-                }
-            </style>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <title>Step Odyssey</title>
+                </div>
+                <div class="col-sm-4">
+                    <div class="Oddys">
+                        <style>
+                            body {
+                            background-image: url('static/img/step_img.jpeg');
+                            background-repeat: no-repeat;
+                            background-attachment: fixed;  
+                            background-size: cover;
+                            background-blend-mode: Chrome 35;
+                            }
+                        </style>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <img src="/static/img/dalee_image.png" class="rounded-circle shadow-4" style="width: 200px;" alt="Avatar" align="right"> 
+                </div>
+            </div>
         </div>
     </head>
-        <p style="background-image: url('/static/img/dalee_image.png');"></p>
-        <img src="/static/img/dalee_image.png" class="rounded-circle shadow-4" style="width: 500px;" alt="Avatar"> 
-            
-        </div>
- 
-
     <body>
         <header>
-           
-        </header>
-        {% include 'nav_bar.html' %}
-            
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8" >
+                        {% include 'nav_bar.html' %}
+                    </div>
+                    <div class="col-sm-4">
+                        
+                    </div>
+                </div>   
+            </div>
+        </header>    
         <div>
             {% with messages = get_flashed_messages() %}
                 {% for message in messages %}
                     <div class="alert alert-warning">{{ message }}</div>
                 {% endfor %}
             {% endwith %}
-
         </div>
        
-        <div id="content" style="background-color: #FFFFFF;">
+        <div id="content" style="background-color: hsl(0, 42%, 57%);">
             {% block content %}
             {% endblock content %}
         </div>
-        <div>
-            {% include 'sharing.html' %}
-           
-        </div>
+        <footer>
+            <div>
+                {% include 'sharing.html' %}
+            </div>
+        </footer>
+
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

@@ -74,8 +74,7 @@ def rendering_profile():
     status_of_challenge = "None"
     for challenge in user.user_challenges:
         # get steps from day of end_time instead of daily total
-        steps = crud.get_steps_by_date(user.user_id, challenge.start_time)
-        progress = challenge.challenges.total_to_compete-steps
+        progress = crud.get_steps_by_date(user.user_id, challenge.start_time)
         start = challenge.start_time
         challenge_date = datetime(year=start.year, month=start.month,
                                   day=start.day)
@@ -89,8 +88,6 @@ def rendering_profile():
             complete = "Hurray! You made it!"
             status_of_challenge = "Over"
             duration = now - start
-            progress = "(+extra)" + str(steps-challenge.challenges.total_to_compete
-                                        )
 
         else:
             complete = "Getting there"
@@ -418,6 +415,7 @@ def challenges():
         sender = crud.get_user_by_id(invite.sender)
         requests_for_challenge.append(
             {"challenge": challenge, "sender": sender})
+
     # get all has_invites
     # for each inv find challenge and sender
     # create dict and pass to jinja
@@ -438,7 +436,7 @@ def join_challenges():
     challenge_id = request.get_json()['id']
     print(challenge_id)
     challenge_data = crud.get_challenge_by_id(challenge_id)
-    start_time = datetime.now()
+    start_time = date.today()
 
     crud.delete_all_challenge_invites(user.user_id, challenge_id)
 
@@ -537,13 +535,12 @@ def cancel_invite():
     return "{}"
 
 
-def fetch_steps(token):
-    today = date.today()
-    today = date(today.year, today.month, today.day)
+def fetch_steps(token, day):
+    day = date(day.year, day.month, day.day)
     start_time = datetime.combine(
-        today, datetime.min.time()).timestamp()
+        day, datetime.min.time()).timestamp()
     end_time = datetime.combine(
-        today, datetime.max.time()).timestamp()
+        day, datetime.max.time()).timestamp()
     req = FitnessRequest(start_time, end_time)
     headers = {
         "Content-Type": "application/json;encoding=utf-8",
@@ -551,24 +548,26 @@ def fetch_steps(token):
     }
     print(req.to_body())
     #  Sample outputL {'bucket': [{'startTimeMillis': '1705384320000', 'endTimeMillis': '1705387920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': [{'startTimeNanos': '1705384320000000000', 'endTimeNanos': '1705386154881356800', 'dataTypeName': 'com.google.step_count.delta', 'originDataSourceId': 'derived:com.google.step_count.delta:com.google.ios.fit:appleinc.:watch:860ab664:top_level', 'value': [{'intVal': 89, 'mapVal': []}]}]}]}, {'startTimeMillis': '1705387920000', 'endTimeMillis': '1705391520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705391520000', 'endTimeMillis': '1705395120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705395120000', 'endTimeMillis': '1705398720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705398720000', 'endTimeMillis': '1705402320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705402320000', 'endTimeMillis': '1705405920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705405920000', 'endTimeMillis': '1705409520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705409520000', 'endTimeMillis': '1705413120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705413120000', 'endTimeMillis': '1705416720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705416720000', 'endTimeMillis': '1705420320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705420320000', 'endTimeMillis': '1705423920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705423920000', 'endTimeMillis': '1705427520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705427520000', 'endTimeMillis': '1705431120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705431120000', 'endTimeMillis': '1705434720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705434720000', 'endTimeMillis': '1705438320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705438320000', 'endTimeMillis': '1705441920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705441920000', 'endTimeMillis': '1705445520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705445520000', 'endTimeMillis': '1705449120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705449120000', 'endTimeMillis': '1705452720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705452720000', 'endTimeMillis': '1705456320000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705456320000', 'endTimeMillis': '1705459920000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705459920000', 'endTimeMillis': '1705463520000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705463520000', 'endTimeMillis': '1705467120000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}, {'startTimeMillis': '1705467120000', 'endTimeMillis': '1705470720000', 'dataset': [{'dataSourceId': 'derived:com.google.step_count.delta:com.google.android.gms:aggregated', 'point': []}]}]}
-    return requests.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", headers=headers, data=req.to_body()).json(), today
+    return requests.post("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", headers=headers, data=req.to_body()).json()
 
 
 def update_steps(user_id):
     user = crud.get_user_by_id(user_id)
     access_token = getting_access_token(user.refresh_token)
-    whole_data_pack, today = fetch_steps(access_token)
-    print("------------------------------", whole_data_pack)
-    daily_total = 0
-    print(whole_data_pack)
-    for element in whole_data_pack['bucket']:  # bucket
-        for every_el in element['dataset']:  # start;end;dataset
-            for el in every_el['point']:  # data,points
-                for e in el['value']:
-                    daily_total += e['intVal']
-    steps = crud.create_steps(
-        user_id=user.user_id, daily_total=daily_total, date=today)
-    db.session.merge(steps)
+
+    week = 7
+    for offset in range(week):
+        day = date.today()-timedelta(days=offset)
+        whole_data_pack = fetch_steps(access_token, day)
+        daily_total = 0
+        for element in whole_data_pack['bucket']:  # bucket
+            for every_el in element['dataset']:  # start;end;dataset
+                for el in every_el['point']:  # data,points
+                    for e in el['value']:
+                        daily_total += e['intVal']
+        steps = crud.create_steps(
+            user_id=user.user_id, daily_total=daily_total, date=day)
+        db.session.merge(steps)
     db.session.commit()
 
 

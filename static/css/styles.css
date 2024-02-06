@@ -3,19 +3,75 @@ table, th, td {
   border-collapse: collapse;
 }
 th, td {
-  background-color: #96D4D4;
+  background-color: #f0f4f4;
+}
+
+#main_block {
+  
+}
+
+#sync_button {
+  background-color: #3e8e41;
+}
+
+#logout_button {
+  background-color: #3e8e41;
+}
+
+#Invited_friends {
+  background-color: orange;
+  font-style: italic  ;
+  color: #3e8e41;
+}
+
+
+
+#navigation {
+  toomax-width:"100px";
+  color: red;
+  font-family: 'Times New Roman', Times, serif;
+
+}
+
+.button {
+  background-color: #04AA6D; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+#In_progress {
+  font-weight: 100;
+  font-style: oblique;
+  color:aqua;
+
+}
+#avatar_block {
+  background-color: black;
+  opacity: 70%;
+ 
+}
+
+p {
+  display: inline-block;
+  background-color: white;
+  font-family: fantasy;
 }
 
 .navbar-expand{-sm|-md|-lg|-xl}
-
+.container-fluid
 .form-inline
 .rounded-circle
 /* Dropdown Button */
 .dropbtn {
   background-color: #04AA6D;
   color: white;
-  padding: 16px;
-  font-size: 16px;
+  padding: 5px;
+  font-size: 5px;
   border: none;
 }
 
@@ -51,3 +107,9 @@ th, td {
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.ach_img  {
+  max-width: 200px;
+  height: auto;
+  border-radius: 8px;
+}
