@@ -238,30 +238,41 @@ def example_data():
     db.session.add_all([steps1, steps2, steps3, steps4])
     db.session.commit()
 
-    challenge1 = Challenges(title="Hit 5k", duration=24, total_to_compete=5000)
+    challenge1 = Challenges(
+        title="Stride and Thrive: The 5,000 Step Daily Challenge", duration=24, total_to_compete=5000)
     challenge2 = Challenges(
-        title="Hit 10k", duration=24, total_to_compete=10000)
+        title="March to Wellness: The 10,000 Steps Challenge", duration=24, total_to_compete=10000)
     challenge3 = Challenges(
-        title="Hit 20k", duration=24, total_to_compete=20000)
+        title="March to Mastery: The 20,000 Steps Challenge", duration=24, total_to_compete=20000)
     challenge4 = Challenges(
-        title="Hit 30k", duration=24, total_to_compete=30000)
+        title="March to Triumph: The 30,000 Steps Challenge", duration=24, total_to_compete=30000)
     challenge5 = Challenges(
-        title="Hit 40k", duration=24, total_to_compete=40000)
+        title="March to Victory: The 40,000 Steps Challenge", duration=24, total_to_compete=40000)
     challenge6 = Challenges(
-        title="Hit 50k", duration=24, total_to_compete=50000)
+        title="March to Glory: The 50,000 Steps Challenge", duration=24, total_to_compete=50000)
     challenge7 = Challenges(
-        title="Hit 60k", duration=24, total_to_compete=60000)
+        title="March to Legend: The 60,000 Steps Challenge", duration=24, total_to_compete=60000)
     challenge8 = Challenges(
-        title="Hit 70k", duration=24, total_to_compete=70000)
+        title="March to Infinity: The 70,000 Steps Challenge", duration=24, total_to_compete=70000)
     challenge9 = Challenges(
-        title="Hit 80k", duration=24, total_to_compete=80000)
+        title="March to the Beyond: The 80,000 Steps Challenge", duration=24, total_to_compete=80000)
     challenge10 = Challenges(
-        title="Hit 90k", duration=24, total_to_compete=90000)
+        title="March to the Summit: The 90,000 Steps Challenge", duration=24, total_to_compete=90000)
     challenge11 = Challenges(
-        title="Hit 100k", duration=24, total_to_compete=100000)
+        title="March to the Apex: The 100,000 Steps Challenge", duration=24, total_to_compete=100000)
+    challenge12 = Challenges(
+        title="Odyssey Sprint: The 20,000 Step 2-Day Challenge", duration=48, total_to_compete=20000)
+    challenge13 = Challenges(
+        title="Odyssey Trek: The 30,000 Step 2-Day Marathon", duration=48, total_to_compete=30000)
+    challenge14 = Challenges(
+        title="Odyssey Voyage: The 40,000 Step 2-Day Quest", duration=48, total_to_compete=40000)
+    challenge15 = Challenges(
+        title="Odyssey Expedition: The 50,000 Step 2-Day Quest", duration=48, total_to_compete=50000)
+    challenge16 = Challenges(
+        title="Odyssey: The 100,000 Step 7-Day Epic", duration=168, total_to_compete=100000)
 
     db.session.add_all([challenge1, challenge2, challenge3, challenge4, challenge5,
-                       challenge6, challenge7, challenge8, challenge9, challenge10, challenge11])
+                       challenge6, challenge7, challenge8, challenge9, challenge10, challenge11, challenge12, challenge13, challenge14, challenge15, challenge16])
 
     # chat_box1 = ChatBox(user1_id=gagne.user_id,
     #                     user2_id=bagne.user_id,)
@@ -276,30 +287,30 @@ def example_data():
     # db.session.commit()
 
     achievements1 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=10000, title="10k Nice! You are alive!!")
+        image="/static/img/10k_achievement.jpeg", condition=10000, title="Odyssey Conqueror: The 10,000 Step Milestone")
 
     achievements2 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=100000, title="100k Hooray!!")
-    achievements3 = Achievements(image="/static/img/10k_achievement.jpeg",
-                                 condition=200000, title="20k Where Are You Heading?!")
-    achievements4 = Achievements(image="/static/img/10k_achievement.jpeg", condition=300000, title="300k Half way to Moon"
+        image="/static/img/100k_achievement.jpeg", condition=100000, title="Odyssey Legend: The 100,000 Step Epic Journey")
+    achievements3 = Achievements(image="/static/img/200k_achievement.jpeg",
+                                 condition=200000, title="Odyssey Titan: The 200,000 Step Odyssey Triumph")
+    achievements4 = Achievements(image="/static/img/300k_achievement.jpeg", condition=300000, title="Odyssey Immortal: The 300,000 Step Odyssey Masterpiece"
                                  )
-    achievements5 = Achievements(image="/static/img/10k_achievement.jpeg", condition=400000, title="400k Now thats what I'm talking about!"
+    achievements5 = Achievements(image="/static/img/400k_achievement.jpeg", condition=400000, title="Odyssey Sovereign: The 400,000 Step Supreme Expedition"
                                  )
-    achievements6 = Achievements(image="/static/img/10k_achievement.jpeg", condition=500000, title="500k ..."
+    achievements6 = Achievements(image="/static/img/500k_achievement.jpeg", condition=500000, title="Odyssey Monarch: The 500,000 Step Ultimate Quest"
                                  )
-    achievements7 = Achievements(image="/static/img/10k_achievement.jpeg", condition=600000, title="600k ,.,"
+    achievements7 = Achievements(image="/static/img/600k_achievement.jpeg", condition=600000, title="Odyssey Deity: The 600,000 Step Grand Odyssey"
                                  )
-    achievements8 = Achievements(image="/static/img/10k_achievement.jpeg", condition=700000, title="700k woooooow"
+    achievements8 = Achievements(image="/static/img/700k_achievement.jpeg", condition=700000, title="Odyssey Cosmos: The 700,000 Step Galactic Journey"
                                  )
     achievements9 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=800000, title="800k gosh!")
+        image="/static/img/800k_achievement.jpeg", condition=800000, title="Odyssey Infinite: The 800,000 Step Endless Voyage")
 
     achievements10 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=900000, title="900k you are doing it!!!!")
+        image="/static/img/900k_achievement.jpeg", condition=900000, title="Odyssey Eternal: The 900,000 Step Timeless Trek")
 
     achievements11 = Achievements(
-        image="/static/img/10k_achievement.jpeg", condition=1000000, title="The Impossible!")
+        image="/static/img/1000k_achievement.jpeg", condition=1000000, title="Odyssey Mythic: The 1,000,000 Step Legendary Odyssey")
 
     db.session.add_all([achievements1, achievements2, achievements3, achievements4, achievements5,
                        achievements6, achievements7, achievements8, achievements9, achievements10, achievements11])

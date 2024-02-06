@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY", None)
 app.jinja_env.undefined = StrictUndefined
 
-# TODO: crash if empty
+# TODO: crash i
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
@@ -74,25 +74,24 @@ def rendering_profile():
     status_of_challenge = "None"
     for challenge in user.user_challenges:
         # get steps from day of end_time instead of daily total
-        progress = crud.get_steps_by_date(user.user_id, challenge.start_time)
-        start = challenge.start_time
-        challenge_date = datetime(year=start.year, month=start.month,
-                                  day=start.day)
+        steps = crud.get_steps_by_date(user.user_id, challenge.start_time)
+        end = challenge.end_time
+        challenge_date = datetime(year=end.year, month=end.month,
+                                  day=end.day)
+        duration = now-challenge.end_time
+        progress = challenge.challenges.total_to_compete-steps
 
-        if challenge_date < daystart and progress > 0:
+        if challenge_date <= daystart and progress > 0:
             complete = "You lost..."
             status_of_challenge = "Over"
-            duration = now - start
 
-        elif challenge_date < daystart and progress < 0:
+        elif challenge_date <= daystart and progress < 0:
             complete = "Hurray! You made it!"
             status_of_challenge = "Over"
-            duration = now - start
 
         else:
             complete = "Getting there"
             status_of_challenge = "In progress"
-            duration = start - daynext
 
         friends_challenges = crud.get_users_challenges(
             friends_list, challenge.challenge_id)
@@ -109,7 +108,7 @@ def rendering_profile():
             'user_challenge': challenge,
             'duration': humanize.naturaltime(duration),
             'status': status_of_challenge,
-            'progress': progress,
+            'progress': steps,
             'complete': complete,
             'friends': friends_state,
         })
@@ -139,7 +138,6 @@ def rendering_profile():
 
     user_achievements = crud.get_user_achievements(user.user_id)
     print("------------")
-    print(friends_state)
 
     has_invites = crud.has_invites(user.user_id)
 

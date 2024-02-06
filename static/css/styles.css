@@ -6,10 +6,6 @@ th, td {
   background-color: #f0f4f4;
 }
 
-#main_block {
-  
-}
-
 #sync_button {
   background-color: #3e8e41;
 }
@@ -19,7 +15,7 @@ th, td {
 }
 
 #Invited_friends {
-  background-color: orange;
+  background-color: rgb(255, 0, 195);
   font-style: italic  ;
   color: #3e8e41;
 }
@@ -30,6 +26,13 @@ th, td {
   toomax-width:"100px";
   color: red;
   font-family: 'Times New Roman', Times, serif;
+
+}
+
+#In_progress {
+  font-weight: 100;
+  font-style: oblique;
+  color:aqua;
 
 }
 
@@ -44,14 +47,11 @@ th, td {
   font-size: 16px;
 }
 
-#In_progress {
-  font-weight: 100;
-  font-style: oblique;
-  color:aqua;
 
-}
+
+
 #avatar_block {
-  background-color: black;
+  background-color: goldenrod;
   opacity: 70%;
  
 }

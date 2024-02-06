@@ -101,7 +101,7 @@
                                 <td scope="col">{{row['user_challenge'].challenges.title}}</td>
                                 <td scope="col">{{row['progress']}}
                                     <label for="file"></label>
-                                    <progress id="file" value="{{(row['progress'])}}" max="{{row['user_challenge'].challenges.total_to_compete}}"> </progress>
+                                    <progress  class="progress-bar progress-bar-striped bg-info" role="progressbar" id="file" value="{{(row['progress'])}}" max="{{row['user_challenge'].challenges.total_to_compete}}" style="width: 50%"</progress>
                                 </td>
                                 <td scope="col">{{row['complete']}}</td>
                                 <td scope="col">{{row['duration']}}</td>
