@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Friends, Steps, Challenges, Achievements, UserChallenges, UserAchievements, FriendRequest, ChallengeRequest, connect_to_db
+from model import db, User, Friends, Steps, Challenges, Achievements, UserChallenges, UserAchievements, FriendRequest, ChallengeRequest, UserMessage, connect_to_db
 from sqlalchemy import insert, or_, and_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import func
@@ -15,6 +15,15 @@ def create_user(name, email, token):
                 refresh_token="", user_password="", user_avatar="")
 
     return user
+
+
+def post_message(sender, message):
+    """Adding message to db."""
+
+    adding_message = UserMessage(user_id=sender, message=message)
+
+    db.session.add(adding_message)
+    db.session.commit()
 
 
 def create_steps(user_id, daily_total, date):

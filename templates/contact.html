@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container-fluid" id="main_block">
+  <div class="container-fluid" id="avatar_block">
+    <div class="row">
+      <div class="col-sm">
+        <title>Contact Information</title>
+        <form>
+          <label for="message_text"><h1>Send us a message!</h1></label><br />
+          <input
+            type="text"
+            id="message_text"
+            value="Message"
+            class="table table-dark"
+            style="background-color: black"
+          /><br />
+          <input type="submit" value="Submit" id="submit" class="button" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="static/send_message.js"></script>
+{% endblock %}

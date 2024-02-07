@@ -1,33 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+<div class="site-wrapper">
+  <div class="site-wrapper-inner">
+    {% if "user_email" in session %}
 
-{% extends 'base.html' %}
-
-{% block content %}   
-        <div class="site-wrapper">
-            <div class="site-wrapper-inner">
-                {% if "user_email" in session %}
-                <h1>Step Odyssey</h1>
-                
-                <form action="/login/google">
-                    <p>Access google</p>
-                    <button type="submit" class="btn btn-primary">Log in!</button>
-                </form>
-               
-            </div>
-            <div>
-                {% else %}
-                    <h2>Please login in</h2>     
-                <div class="col-auto">
-                    <form action="/login/google">
-                        <p>Log in with your google acc</p>
-                        <button type="submit" class="btn btn-primary">Log in!</button>
-                    </form>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    <script type="text/javascript">
-        
-
-
-    </script>
+    <img id="avatar_block" src="static/img/bear.png" alt="bear" />
+    <!-- <form action="/login/google">
+      <p>Access google</p>
+      <button type="submit" class="btn btn-primary">Log in!</button>
+    </form> -->
+  </div>
+  <div>
+    {% else %}
+    <h2>Please login in</h2>
+    <div class="col-auto">
+      <form action="/login/google">
+        <p>Log in with your google acc</p>
+        <button type="submit" class="btn btn-primary">Log in!</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

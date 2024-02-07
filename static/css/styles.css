@@ -6,13 +6,35 @@ th, td {
   background-color: #f0f4f4;
 }
 
+#homepage_image {
+  opacity: 60%;
+}
+
 #sync_button {
   background-color: #3e8e41;
 }
 
+
+#logo {
+  opacity: 70%;
+  position: right;
+  float: right; 
+  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4))
+}
 #logout_button {
   background-color: #3e8e41;
+  margin-left: auto;
+  margin-right: 0;
 }
+
+#contactform {
+    margin: auto;
+    width: 640px; 
+    padding: 50px;
+    font-family: 'Avenir', sans-serif; 
+    color: #33475b;    
+  }
+
 
 #Invited_friends {
   background-color: rgb(255, 0, 195);
@@ -22,13 +44,6 @@ th, td {
 
 
 
-#navigation {
-  toomax-width:"100px";
-  color: red;
-  font-family: 'Times New Roman', Times, serif;
-
-}
-
 #In_progress {
   font-weight: 100;
   font-style: oblique;
@@ -37,7 +52,7 @@ th, td {
 }
 
 .button {
-  background-color: #04AA6D; /* Green */
+  background-color: #0f7f56; /* Green */
   border: none;
   color: white;
   padding: 15px 32px;
@@ -62,22 +77,24 @@ p {
   font-family: fantasy;
 }
 
-.navbar-expand{-sm|-md|-lg|-xl}
-.container-fluid
+.navbar-expand{
+          background-color: red;}
+
 .form-inline
 .rounded-circle
 /* Dropdown Button */
 .dropbtn {
-  background-color: #04AA6D;
-  color: white;
+  background-color: #4f4c18;
+  color: goldenrod;
   padding: 5px;
   font-size: 5px;
   border: none;
+  size: 5px;
 }
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
-  position: relative;
+  position: left;
   display: inline-block;
 }
 
@@ -85,28 +102,29 @@ p {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  background-color: goldenrod;
+  min-width: 10px;
+  box-shadow: 0px 8px 8px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  text-align: justify;
 }
 
 /* Links inside the dropdown */
 .dropdown-content a {
   color: black;
-  padding: 12px 16px;
+  padding: 10px 10px;
   text-decoration: none;
   display: block;
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {background-color: #4f4c18;}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.dropdown:hover .dropbtn {background-color: #444330;}
 
 .ach_img  {
   max-width: 200px;

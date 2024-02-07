@@ -35,9 +35,38 @@ def get_google_provider_cfg():
 @app.route("/")
 def homepage():
     """View homepage."""
-    if "user_email" in session:
-        return redirect("/profile")
+    # if "user_email" in session:
+    #     return redirect("/homepage")
+
     return render_template("homepage.html")
+
+
+@app.route("/contact")
+def contact():
+    """View contact us."""
+    if "user_email" not in session:
+        return redirect("/")
+    user_email = session["user_email"]
+    return render_template("contact.html", user_email=user_email)
+
+
+@app.route("/contact_mes", methods=["POST"])
+def send_message():
+    """Post message."""
+
+    if "user_email" not in session:
+        return redirect("/"), 401
+    user = crud.get_user_by_email(session["user_email"])
+    # checking if user exists
+    if not user:
+        del session["user_email"]
+        return "{}", 401
+
+    user_message = request.get_json()["message"]
+    crud.post_message(
+        sender=user.user_id, message=user_message)
+
+    return "{}"
 
 
 @app.route('/profile')
@@ -82,26 +111,24 @@ def rendering_profile():
         progress = challenge.challenges.total_to_compete-steps
 
         if challenge_date <= daystart and progress > 0:
-            complete = "You lost..."
+            complete = "Not completed"
             status_of_challenge = "Over"
-
-        elif challenge_date <= daystart and progress < 0:
-            complete = "Hurray! You made it!"
+        elif progress <= 0:
+            complete = "You made it!"
             status_of_challenge = "Over"
-
         else:
-            complete = "Getting there"
+            complete = "A few more steps!"
             status_of_challenge = "In progress"
 
         friends_challenges = crud.get_users_challenges(
             friends_list, challenge.challenge_id)
         friends_state = []
         for challenge in friends_challenges:
-            steps = crud.get_steps_by_date(
+            friend_steps = crud.get_steps_by_date(
                 challenge.user_id, datetime.now())
             friends_state.append({
                 'friend': challenge.user,
-                'steps': steps
+                'steps': friend_steps
             })
 
         user_challenges.append({
@@ -115,8 +142,8 @@ def rendering_profile():
     user_challenges.reverse()
 
     # achievement adding process
-    lifetime_steps = crud.lifetime_steps(user.user_id)
-    # lifetime_steps = 1000000
+    # lifetime_steps = crud.lifetime_steps(user.user_id)
+    lifetime_steps = 1000000
     all_achievements = crud.get_achievements()
     user_achievements = crud.get_user_achievements(user.user_id)
 

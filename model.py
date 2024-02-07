@@ -32,6 +32,16 @@ class User(db.Model):
         return f"{self.user_name}"
 
 
+class UserMessage(db.Model):
+    """User messages."""
+
+    __tablename__ = "user_message"
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user_data.user_id"))
+    message = db.Column(db.String)
+
+
 class Friends(db.Model):
     """A friends data."""
 
@@ -206,36 +216,44 @@ def example_data():
     Friends.query.delete()
     User.query.delete()
     db.session.commit()
-    gagne = User(user_name='gAgne', user_email='fizike@gmail.com')
-    bagne = User(user_name='Bagne', user_email='fizikea@gmail.com')
-    cagne = User(user_name='Cagne', user_email='fizikeu@gmail.com')
-    dagne = User(user_name='Dagne', user_email='fizikei@gmail.com')
 
-    db.session.add_all([gagne, bagne, cagne, dagne])
+    agne = User(user_name='Agne', user_email='fizikee@gmail.com')
+    peter = User(user_name='Peter', user_email='peter@gmail.com')
+    carl = User(user_name='Carl', user_email='carl@gmail.com')
+    alma = User(user_name='Alma', user_email='alma@gmail.com')
+    rachel = User(user_name='Rachel', user_email='rachel@gmail.com')
+    jennifer = User(user_name='Jennifer', user_email='jenni@gmail.com')
+    sean = User(user_name='Sean', user_email='sean@gmail.com')
+    zoe = User(user_name='Zoe', user_email='zoe@gmail.com')
+    silvia = User(user_name='Silvia', user_email='silvi_a@gmail.com')
+
+    db.session.add_all([agne, carl, peter, alma, rachel,
+                       jennifer, sean, zoe, silvia])
     db.session.commit()
 
-    friend1 = Friends(user_id=gagne.user_id,
-                      friend_id=bagne.user_id, status_acceptance=True)
-    friend2 = Friends(user_id=bagne.user_id,
-                      friend_id=cagne.user_id, status_acceptance=True)
-    friend3 = Friends(user_id=cagne.user_id,
-                      friend_id=dagne.user_id, status_acceptance=True)
-    friend4 = Friends(user_id=dagne.user_id,
-                      friend_id=gagne.user_id, status_acceptance=True)
+    friend1 = Friends(user_id=peter.user_id,
+                      friend_id=carl.user_id, status_acceptance=True)
+    friend2 = Friends(user_id=carl.user_id,
+                      friend_id=peter.user_id, status_acceptance=True)
+    friend3 = Friends(user_id=agne.user_id,
+                      friend_id=peter.user_id, status_acceptance=True)
+    friend4 = Friends(user_id=carl.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+    friend5 = Friends(user_id=alma.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+    friend6 = Friends(user_id=rachel.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+    friend7 = Friends(user_id=jennifer.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+    friend8 = Friends(user_id=sean.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+    friend9 = Friends(user_id=zoe.user_id,
+                      friend_id=agne.user_id, status_acceptance=True)
+    friend10 = Friends(user_id=silvia.user_id,
+                       friend_id=agne.user_id, status_acceptance=True)
 
-    db.session.add_all([friend1, friend2, friend3, friend4])
-    db.session.commit()
-
-    steps1 = Steps(user_id=gagne.user_id, daily_total=15000, date="2024-1-1"
-                   )
-    steps2 = Steps(user_id=bagne.user_id, daily_total=15800, date="2024-1-3"
-                   )
-    steps3 = Steps(user_id=cagne.user_id, daily_total=12000, date="2024-1-2"
-                   )
-    steps4 = Steps(user_id=dagne.user_id, daily_total=15060, date="2024-1-5"
-                   )
-
-    db.session.add_all([steps1, steps2, steps3, steps4])
+    db.session.add_all([friend1, friend2, friend3, friend4,
+                       friend5, friend6, friend7, friend8, friend9, friend10])
     db.session.commit()
 
     challenge1 = Challenges(
@@ -273,18 +291,30 @@ def example_data():
 
     db.session.add_all([challenge1, challenge2, challenge3, challenge4, challenge5,
                        challenge6, challenge7, challenge8, challenge9, challenge10, challenge11, challenge12, challenge13, challenge14, challenge15, challenge16])
+    db.session.commit()
 
-    # chat_box1 = ChatBox(user1_id=gagne.user_id,
-    #                     user2_id=bagne.user_id,)
-    # chat_box2 = ChatBox(user1_id=bagne.user_id,
-    #                     user2_id=cagne.user_id)
-    # chat_box3 = ChatBox(user1_id=cagne.user_id,
-    #                     user2_id=dagne.user_id)
-    # chat_box4 = ChatBox(user1_id=dagne.user_id,
-    #                     user2_id=gagne.user_id)
+    user_challenge1 = UserChallenges(
+        user_id=1, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge2 = UserChallenges(
+        user_id=2, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge3 = UserChallenges(
+        user_id=3, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge4 = UserChallenges(
+        user_id=4, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge5 = UserChallenges(
+        user_id=5, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge6 = UserChallenges(
+        user_id=6, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge7 = UserChallenges(
+        user_id=7, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge8 = UserChallenges(
+        user_id=8, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
+    user_challenge9 = UserChallenges(
+        user_id=9, challenge_id=1, start_time=2024-2-6, end_time=2024-2-7, complete=False)
 
-    # db.session.add_all([chat_box1, chat_box2, chat_box3, chat_box4])
-    # db.session.commit()
+    db.session.add_all([user_challenge1, user_challenge2, user_challenge3, user_challenge4, user_challenge5,
+                       user_challenge6, user_challenge7, user_challenge8, user_challenge9, ])
+    db.session.commit()
 
     achievements1 = Achievements(
         image="/static/img/10k_achievement.jpeg", condition=10000, title="Odyssey Conqueror: The 10,000 Step Milestone")
@@ -316,6 +346,62 @@ def example_data():
                        achievements6, achievements7, achievements8, achievements9, achievements10, achievements11])
     db.session.commit()
 
+    challenge_request1 = ChallengeRequest(
+        receiver=agne.user_id, sender=peter.user_id, challenge_id=1)
+    challenge_request2 = ChallengeRequest(
+        receiver=agne.user_id, sender=carl.user_id, challenge_id=1)
+    challenge_request3 = ChallengeRequest(
+        receiver=agne.user_id, sender=alma.user_id, challenge_id=1)
+    challenge_request4 = ChallengeRequest(
+        receiver=agne.user_id, sender=silvia.user_id, challenge_id=1)
+    challenge_request5 = ChallengeRequest(
+        receiver=agne.user_id, sender=zoe.user_id, challenge_id=1)
+    challenge_request6 = ChallengeRequest(
+        receiver=agne.user_id, sender=jennifer.user_id, challenge_id=1)
+    challenge_request7 = ChallengeRequest(
+        receiver=agne.user_id, sender=sean.user_id, challenge_id=1)
+    challenge_request8 = ChallengeRequest(
+        receiver=agne.user_id, sender=rachel.user_id, challenge_id=1)
+
+    db.session.add_all([challenge_request1, challenge_request2, challenge_request3, challenge_request4,
+                       challenge_request5, challenge_request6, challenge_request7, challenge_request8])
+    db.session.commit()
+
+    steps1 = Steps(user_id=peter.user_id, daily_total=1930, date="2024-2-6"
+                   )
+    steps2 = Steps(user_id=agne.user_id, daily_total=13965, date="2024-2-6"
+                   )
+    steps3 = Steps(user_id=carl.user_id, daily_total=1682, date="2024-2-6"
+                   )
+    steps4 = Steps(user_id=alma.user_id, daily_total=10328, date="2024-2-6"
+                   )
+    steps5 = Steps(user_id=jennifer.user_id, daily_total=40392, date="2024-2-6"
+                   )
+    steps6 = Steps(user_id=silvia.user_id, daily_total=254, date="2024-2-6"
+                   )
+    steps7 = Steps(user_id=zoe.user_id, daily_total=200, date="2024-2-6"
+                   )
+    steps8 = Steps(user_id=rachel.user_id, daily_total=2, date="2024-2-6"
+                   )
+    steps9 = Steps(user_id=sean.user_id, daily_total=2712, date="2024-2-6"
+                   )
+
+    db.session.add_all([steps1, steps2, steps3, steps4,
+                       steps5, steps6, steps7, steps8, steps9])
+    db.session.commit()
+
+    # chat_box1 = ChatBox(user1_id=gagne.user_id,
+    #                     user2_id=bagne.user_id,)
+    # chat_box2 = ChatBox(user1_id=bagne.user_id,
+    #                     user2_id=cagne.user_id)
+    # chat_box3 = ChatBox(user1_id=cagne.user_id,
+    #                     user2_id=dagne.user_id)
+    # chat_box4 = ChatBox(user1_id=dagne.user_id,
+    #                     user2_id=gagne.user_id)
+
+    # db.session.add_all([chat_box1, chat_box2, chat_box3, chat_box4])
+    # db.session.commit()
+
 
 def connect_to_db(flask_app, db_uri="postgresql:///step_challenge", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
@@ -334,4 +420,4 @@ if __name__ == "__main__":
 
     with app.app_context():
         db.create_all()
-        example_data()
+        # example_data()
