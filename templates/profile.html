@@ -14,26 +14,26 @@
                         <form action="/sync">
                             <button type="submit" class="btn btn-secondary" style="margin: 10px; width: 100px">Sync data</button>
                         </form>
-                        <div style="margin: 10px; width: 200px">{{date}}</div>
+                        <div style="margin: 10px; width: 200px"><h2>{{date}}</h2></div>
                     </div>
                 </div>
             </div>
         </div>
         <br>
-        <div class="rounded-circle" style="padding-right: 60px"> 
-            <div class="card" style="margin: 10px; margin-left: 30px; max-width: 200px; max-height: 100px; background-color: goldenrod">
+        <div class="rounded-circle" style="padding-right: 60px; padding-top: 60px;"> 
+            <div class="card" style="margin: 10px; margin-left: 30px; max-width: 200px; max-height: 200px; background-color: goldenrod">
                 <div class="card-body text-center" style="margin: 1px; width: 200px ">
-                    <p class="card-text">Today you made:</p>
-                    <h3 class="card-text">{{daily_total}}</h3>
+                    <p class="card-text"><h2>Today you made:</h2></p>
+                    <p><h3 class="card-text">{{daily_total}}</h3></p>
                 </div>
             </div>
         </div>
         <br>
-        <div class="rounded-circle"> 
-            <div class="card" style="margin: 10px; margin-left: 30px; max-width: 200px; max-height: 100px; background-color: goldenrod">
-                <div class="card-body text-center" style="margin: 1px; width: 200px">
-                    <p class="card-text">Lifetime steps:  </p>
-                    <h3 class="card-text">{{lifetime_steps}}</h3>
+        <div class="rounded-circle" style="padding-top: 60px"> 
+            <div class="card" style="margin: 10px; margin-left: 30px; max-width: 200px; max-height: 200px; background-color: goldenrod">
+                <div class="card-body text-center" style="width: 200px">
+                    <p class="card-text"><h2>Lifetime steps:  </h2></p>
+                    <p><h3 class="card-text" >{{lifetime_steps}}</h3></p>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
 <br>
 <!-- <div class="container container-fluid" id="avatar_block" style="padding: 100px;"></div> -->
                         {% if user_achievements %}
-                        <div class="container-fluid" id="avatar_block" style="margin-left: 30px; max-width: 95%;" >
+                        <div class="container-fluid" id="avatar_block" style="margin-left: 30px; max-width: 95%" >
                             <div class="row">
                                 <div class="col-sm">
                                     <table class="table table-dark">

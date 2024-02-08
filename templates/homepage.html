@@ -1,33 +1,30 @@
 {% extends 'base.html' %} {% block content %}
-<div class="container-fluid" id="main_block">
-  <div class="container-fluid" id="avatar_block">
-    <div class="row">
-      <div class="col-sm">
-        <div class="site-wrapper">
-          <div class="site-wrapper-inner">
-            {% if "user_email" in session %}
 
-            <img id="avatar_block" src="static/img/bear.png" alt="bear" />
-            <!-- <form action="/login/google">
+<div class="container-fluid" id="avatar_block">
+  <div class="row">
+    <div class="col-sm">
+      <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+          {% if "user_email" in session %}
+
+          <img id="avatar_block" src="static/img/bear.png" alt="bear" />
+          <!-- <form action="/login/google">
       <p>Access google</p>
       <button type="submit" class="btn btn-primary">Log in!</button>
     </form> -->
 
-            <div>
-              {% else %}
-              <h2>Log in with your google account!</h2>
-              <div class="col-auto">
-                <form action="/login/google">
-                  <button type="submit" class="btn btn-secondary">
-                    Step In
-                  </button>
-                </form>
-              </div>
-              {% endif %}
+          <div>
+            {% else %}
+            <h2 style="padding-top: 5px">Log in with your google account!</h2>
+            <div class="col-auto">
+              <form action="/login/google">
+                <button type="submit" class="btn btn-secondary">Step In</button>
+              </form>
             </div>
+            {% endif %}
           </div>
-          {% endblock %}
         </div>
+        {% endblock %}
       </div>
     </div>
   </div>

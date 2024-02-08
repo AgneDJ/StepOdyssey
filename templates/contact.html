@@ -1,25 +1,26 @@
 {% extends 'base.html' %} {% block content %}
-
-<div class="container-fluid" id="main_block">
-  <div class="container-fluid" id="avatar_block">
-    <div class="row">
-      <div class="col-sm">
-        <form>
-          <label for="message_text"><h1>Send us a message!</h1></label><br />
-          <input
-            type="text"
-            id="message_text"
-            placeholder="Message"
-            class="table table-dark"
-            style="background-color: black"
-          /><br />
-          <input
-            type="submit"
-            value="Submit"
-            id="submit"
-            class="btn btn-secondary"
-          />
-        </form>
+<div class="rounded-circle">
+  <div class="container-fluid" id="main_block">
+    <div class="container-fluid" id="avatar_block">
+      <div class="row">
+        <div class="col-sm">
+          <form>
+            <label for="message_text"><h1>Contact us</h1></label><br />
+            <input
+              type="text"
+              id="message_text"
+              placeholder="Message"
+              class="table table-dark"
+              style="background-color: rgb(255, 255, 255)"
+            /><br />
+            <input
+              type="submit"
+              value="Submit"
+              id="submit"
+              class="btn btn-secondary"
+            />
+          </form>
+        </div>
       </div>
     </div>
   </div>
