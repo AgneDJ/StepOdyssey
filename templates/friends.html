@@ -14,52 +14,47 @@
       placeholder="Add user email"
       aria-label="Search"
     />
-    <button
-      class="btn btn-outline-success my-2 my-sm-0"
-      id="friend_req_button"
-      type="submit"
-    >
+    <button class="btn btn-secondary" id="friend_req_button" type="submit">
       Send a friend request
     </button>
     <div id="Friends">
       <table class="table table-dark">
         <thead>
           <tr>
-            <td scope="col">Name</td>
-            <td scope="col">Daily Steps</td>
-            <td scope="col">Action</td>
-            <td scope="col">Status</td>
+            <th scope="col">Name</th>
+            <th scope="col">Daily Steps</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-          {% for user in friends_list %}
+          {% for friend in friends_steps %}
           <tr>
-            <td scope="col">{{user}}</td>
-            <td scope="col">1986</td>
+            <td scope="col">{{friend.user_name}}</td>
+            <td scope="col">{{friends_steps[friend]}}</td>
             <!-- <td scope="col"><button id = "remove">Remove from friends list</button></td> -->
             <td scope="col">
               <button
-                class="btn btn-outline-success my-2 my-sm-0"
-                id="removing-{{user.user_id}}"
+                class="btn btn-secondary"
+                id="removing-{{friend.user_id}}"
                 type="submit"
               >
                 Remove from friends list
               </button>
             </td>
-            <td scope="col">1986</td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
+
   <div id="Pending">
+    {% if user_list %}
     <table class="table table-dark">
       <thead>
         <tr>
-          <td scope="col">Name</td>
-
-          <td scope="col">Action</td>
+          <th scope="col">Name</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -99,6 +94,7 @@
         {% endfor %}
       </tbody>
     </table>
+    {% endif %}
   </div>
 </div>
 <script>

@@ -3,171 +3,140 @@
 {% include 'friend_request.html' %}
 {% include 'Invite_to_challenge.html' %}
 
-<head>
-    <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-<div class="container-fluid" id="main_block">
-
-    <div class="container-fluid" id="avatar_block">
-        <div class="row">
-            <!-- {% include 'logout.html' %} -->
-            <!-- <div class="col-sm">
-                <form action="/logout">
-                    <button type="submit" class="btn btn-primary" id="logout_button">Log out</button>
-                </form>
-            </div> -->
-            <div class="col-sm">
-            <!-- One of three columns -->
+<div>
+     <div class="card-group" style="padding-right: 40px;">
+        <div class="rounded-circle" style="padding-right: 60px"> 
+            <div class="card" style="margin: 10px; padding-right: 40px; margin-left: 30px; max-width: 200px; max-height: 300px; background-color: goldenrod">
+               <div class="rounded-circle"> 
+                    <div class="card-body" style="margin: 15px; width: 200px" >
+                        <img id="myImg" src="{{user.user_avatar}}" class="rounded-circle" style="margin: 10px; width: 100px" alt="Avatar"/>
+                        <h3 style="margin: 10px; width: 200px">{{user.user_name}}</h3>
+                        <form action="/sync">
+                            <button type="submit" class="btn btn-secondary" style="margin: 10px; width: 100px">Sync data</button>
+                        </form>
+                        <div style="margin: 10px; width: 200px">{{date}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="rounded-circle" style="padding-right: 60px"> 
+            <div class="card" style="margin: 10px; margin-left: 30px; max-width: 200px; max-height: 100px; background-color: goldenrod">
+                <div class="card-body text-center" style="margin: 1px; width: 200px ">
+                    <p class="card-text">Today you made:</p>
+                    <h3 class="card-text">{{daily_total}}</h3>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="rounded-circle"> 
+            <div class="card" style="margin: 10px; margin-left: 30px; max-width: 200px; max-height: 100px; background-color: goldenrod">
+                <div class="card-body text-center" style="margin: 1px; width: 200px">
+                    <p class="card-text">Lifetime steps:  </p>
+                    <h3 class="card-text">{{lifetime_steps}}</h3>
+                </div>
             </div>
         </div>
     </div>
+</div> 
 
-    <div class="container-fluid" id="avatar_block">
-        <div class="row">
-            <div class="col-sm">
-                <div class="rounded-circle shadow-4">
-                    
-                    <div class="card-body">
-                        <div><p><img id="myImg" src="{{user.user_avatar}}" class="rounded-circle shadow-4" style="width: 100px;" alt="Avatar" ="1000px"/></p></div>
-                        <div><p>{{user.user_name}}</p></div></div>
-                        
-                </div> 
-            </div>
-                <div class="col-sm">
-                    <table class="table table-dark">
-                        <div class="container-fluid">
-                            {% if user_achievements %}
-                                <div class="row">
-                                    <h1>Your achievements</h1>
+<br>
+<!-- <div class="container container-fluid" id="avatar_block" style="padding: 100px;"></div> -->
+                        {% if user_achievements %}
+                        <div class="container-fluid" id="avatar_block" style="margin-left: 30px; max-width: 95%;" >
+                            <div class="row">
+                                <div class="col-sm">
+                                    <table class="table table-dark">
+                                        <h1>Your Awards</h1>
+                                        <thead>
+                                        {% for user_achievement in user_achievements %}
+                                        <td scope="col">
+                                            <img src="{{user_achievement.achievements.image}}" class="rounded-circle shadow-4" style="width: 40px" id="ach_img" alt="Achievements image">      
+                                        </td>
+                                        {% endfor %}
+                                    </table>
                                 </div>
-                                    {% for user_achievement in user_achievements %}
-                                    <td scope="col"><button data-bs-toggle="collapse" data-bs-target="#demo"><img src="{{user_achievement.achievements.image}}" class="rounded-circle shadow-4" style="width: 50px;" alt="Achievements image"></button>
-                                        <div id="demo" class="collapse">
-                                            {{user_achievement.achievements.title}}
-                                        </div>
-                                    </td>
-                                        <!-- <td scope="col"><button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title={{user_achievement.achievements.title}}><img src="{{user_achievement.achievements.image}}" class="rounded-circle shadow-4" style="width: 50px;" alt="Achievements image"></button></td> -->
-                                    <!-- <td scope="col"></td> -->
-                                    {% endfor %}
-                                </div> 
-                            {% endif %}
+                            </div>
                         </div>
-                    </table>
-                </div> 
-        </div>
-    </div>
+                        {% endif %}
 
-    <div class="container-fluid" id="avatar_block">
-        <div class="row">
-            <div class="col-sm">
-                <form action="/sync">
-                    <button type="submit" class="btn btn-primary" id="sync_button">Sync data</button>
-                </form>
-            </div>
-            <div class="col-sm">
-                <!-- maybe push logout button to navigations bar? -->
-             
-            </div> 
-        </div>
-    </div>
+<br>
 
-    <div class="container-fluid" id="avatar_block">
-        <div class="row">
-            <div class="col-sm">
-                <table class="table table-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">Daily Total Steps</th>
-                            <th scope="col">Lifetime Steps</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td scope="col">{{date}} - {{daily_total}}</td>
-                            <td scope="col">{{lifetime_steps}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<div class="container-fluid" id="avatar_block" style="margin-left: 30px">
+    <div class="row">
+        <div class="col-sm">
+            <table class="table table-dark">
+                <h1>Your Challenges</h1>
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Progress</th>
+                        <th scope="col">Position</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Invite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in user_challenges %}
+                        <tr id="{{ row['status'] == "In progress" and "In_progress" or ""}}">
+                            <td scope="col">{{row['user_challenge'].challenges.title}}</td>
+                            <td scope="col">{{row['progress']}}
+                                <label for="file"></label>
+                                <progress  class="progress-bar progress-bar-striped bg-info" role="progressbar" id="file" value="{{(row['progress'])}}" max="{{row['user_challenge'].challenges.total_to_compete}}" style="width: 50%"</progress>
+                            </td>
+                            <td scope="col">{{row['complete']}}</td>
+                            <td scope="col">{{row['duration']}}</td>
+                            <td scope="col">{{row['status']}}</td>
+                            <td scope="col">
+                                <div>
+                                    
+                                        {% if row['status'] == "In progress" %}
+                                            <div class="col-sm-1" id="In_progress">
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary">Invite</button>
 
-    <div class="container-fluid" id="avatar_block">
-        <div class="row">
-            <div class="col-sm">
-                <table class="table table-dark">
-                    <h1>Your Challenges</h1>
-                    <thead>
-                        <tr>
-                            <th scope="col">Title</th>
-                            <th scope="col">Progress</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Duration</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Invite</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for row in user_challenges %}
-                            <tr id="{{ row['status'] == "In progress" and "In_progress" or ""}}">
-                                <td scope="col">{{row['user_challenge'].challenges.title}}</td>
-                                <td scope="col">{{row['progress']}}
-                                    <label for="file"></label>
-                                    <progress  class="progress-bar progress-bar-striped bg-info" role="progressbar" id="file" value="{{(row['progress'])}}" max="{{row['user_challenge'].challenges.total_to_compete}}" style="width: 50%"</progress>
-                                </td>
-                                <td scope="col">{{row['complete']}}</td>
-                                <td scope="col">{{row['duration']}}</td>
-                                <td scope="col">{{row['status']}}</td>
-                                <td scope="col">
-                                    <div>
-                                        
-                                            {% if row['status'] == "In progress" %}
-                                                <div class="col-sm-1" id="In_progress">
-                                                    <div class="dropdown">
-                                                        <button class="dropbtn">Invite</button>
-
-                                                        <div class="dropdown-content">
-                                                            {% for user in friends_list %}
-                                                            <button class="btn btn-outline-success my-2 my-sm-0" id="inviting-{{user.user_id}}-{{row['user_challenge'].challenges.challenge_id}}" type="submit"><a href="#">{{user.user_name}}</a></button>
-                                                            {% endfor %}
-                                                        </div>
+                                                    <div class="dropdown-content">
+                                                        {% for user in friends_list %}
+                                                        <button class="btn btn-secondary" id="inviting-{{user.user_id}}-{{row['user_challenge'].challenges.challenge_id}}" type="submit"><a href="#">{{user.user_name}}</a></button>
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
-                                            {% endif %}
-                                        
+                                            </div>
+                                        {% endif %}
+                                    
+                                </div>
+                            </td>
+                        </tr> 
+                        {% if row['friends'] %}
+                        <br>
+                            <thead>
+                                <tr>
+                                    <div id="Invited_friends">
+                                        <th scope="col">Friend</th>
+                                        <th scope="col">Progress</th>
                                     </div>
-                                </td>
-                            </tr> 
-                            {% if row['friends'] %}
-                                <thead>
+                                </tr>
+                            </thead>
+                            <tbody id="Invited_friends">
+                                {% for state in row['friends'] %}
                                     <tr>
-                                        <div id="Invited_friends">
-                                            <th scope="col">Friend</th>
-                                            <th scope="col">Progress</th>
-                                        </div>
+                                        <td scope="col">{{state['friend'].user_name}}</td>
+                                        <td scope="col">{{state['steps']}}</td>
                                     </tr>
-                                </thead>
-                                <tbody id="Invited_friends">
-                                    {% for state in row['friends'] %}
-                                        <tr>
-                                            <td scope="col">{{state['friend'].user_name}}</td>
-                                            <td scope="col">{{state['steps']}}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            {% endif %}
-                        {% endfor %}  
-                    </tbody>  
-                </table>
-            </div>
-        </div> 
-    </div>
+                                {% endfor %}
+                            </tbody>
+                            <br>
+                        {% endif %}
+                    {% endfor %}  
+                </tbody>  
+            </table>
+        </div>
+    </div> 
 </div>
                 
 
 <script src="/static/invite.js"></script>
+
        
 {% endblock %}

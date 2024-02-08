@@ -1,17 +1,33 @@
 table, th, td {
-  border: 1px solid white;
+  border: 0px solid black;
   border-collapse: collapse;
+  max-width: 80%;
+  text-align: justify;
+  margin-left: 80px;
+  box-shadow: 0px 10px 18px #000000;
+  padding-top: 50px;
+ 
+
+
+  
 }
 th, td {
-  background-color: #f0f4f4;
+  background-color: #000000;
 }
+
+#app_background {
+  filter: contrast(30%);
+}
+
+
+
 
 #homepage_image {
   opacity: 60%;
 }
 
 #sync_button {
-  background-color: #3e8e41;
+  background-color: #000000;
 }
 
 
@@ -19,12 +35,15 @@ th, td {
   opacity: 70%;
   position: right;
   float: right; 
-  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4))
+  margin-top: 0px;
+  -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+  
 }
 #logout_button {
-  background-color: #3e8e41;
+  background-color: #282d28;
   margin-left: auto;
   margin-right: 0;
+  border-radius: 10px
 }
 
 #contactform {
@@ -37,9 +56,9 @@ th, td {
 
 
 #Invited_friends {
-  background-color: rgb(255, 0, 195);
+  background-color: rgb(122, 94, 116);
   font-style: italic  ;
-  color: #3e8e41;
+  color: #000000;
 }
 
 
@@ -47,19 +66,23 @@ th, td {
 #In_progress {
   font-weight: 100;
   font-style: oblique;
-  color:aqua;
+  color:rgb(255, 234, 0);
 
 }
 
 .button {
-  background-color: #0f7f56; /* Green */
+  background-color: #050505; /* Green */
   border: none;
   color: white;
-  padding: 15px 32px;
+  padding: 10px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  margin: 3px;
+  border-radius: 10px
+  border-bottom:2px;
+  box-shadow: 0px 10px 18px #000000;
 }
 
 
@@ -67,67 +90,85 @@ th, td {
 
 #avatar_block {
   background-color: goldenrod;
-  opacity: 70%;
- 
+  opacity: 80%;
+  margin-left: 30px; max-width: 95%;
+  box-shadow: 0px 10px 18px #000000;
+  
 }
 
 p {
   display: inline-block;
-  background-color: white;
-  font-family: fantasy;
+  background-color: goldenrod;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
+.card {
+  opacity: 80%;
+  box-shadow: 0px 10px 18px #000000;
+}
 .navbar-expand{
-          background-color: red;}
+          background-color: rgb(75, 72, 74);
+          box-shadow: 0px 10px 18px #000000;
+        }
 
 .form-inline
 .rounded-circle
 /* Dropdown Button */
 .dropbtn {
-  background-color: #4f4c18;
-  color: goldenrod;
+  background-color: #000000;
+  color: rgb(0, 0, 0);
   padding: 5px;
-  font-size: 5px;
-  border: none;
-  size: 5px;
+  font-size: 2px;
+  border: 1px;
+  size: 2px;
+  box-shadow: 0px 10px 18px #000000;
+  
 }
 
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
-  position: left;
-  display: inline-block;
+  padding: auto;
+  display: block;
 }
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: goldenrod;
-  min-width: 10px;
-  box-shadow: 0px 8px 8px 0px rgba(0,0,0,0.2);
+  text-justify: auto;
+  box-shadow: rgb(24, 24, 24);
   z-index: 1;
-  text-align: justify;
+  text-align: center;
+  font-size: 4px;
+  box-shadow: 0px 10px 18px #000000;
 }
+
 
 /* Links inside the dropdown */
 .dropdown-content a {
-  color: black;
-  padding: 10px 10px;
+  color: rgb(0, 0, 0);
+  padding: 0
   text-decoration: none;
   display: block;
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #4f4c18;}
+.dropdown-content a:hover {background-color: #44410e;}
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {display:list-item}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #444330;}
+.dropdown:hover .dropbtn {background-color: #000000;}
 
 .ach_img  {
   max-width: 200px;
   height: auto;
   border-radius: 8px;
+  
 }
+#ach_img {
+  opacity: 100%;
+  box-shadow: 0px 10px 18px #000000;
+}
+

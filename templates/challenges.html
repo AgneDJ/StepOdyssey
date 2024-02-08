@@ -5,7 +5,7 @@
 <div class="container-fluid"  id="avatar_block">
     <div class="row">
         <br />
-        <h1>Challenge list</h1>
+        <h1>Challenge List</h1>
         <br />
       </div>
       <div class="col-sm">
@@ -19,35 +19,14 @@
                 </thead>
                 <tbody>
                 </div>                 
-<div>
-                        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <div>
                         {% for request in requests_for_challenge %}
                         <th scope="col">{{request["sender"].user_name}} has invited you to a {{request["challenge"].title}}
                             <div id="accept_buttons">
-                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id="accept-{{request["challenge"].challenge_id}}" type="submit">Accept</button></td>
+                                <td scope="col"><button class="btn btn-secondary" id="accept-{{request["challenge"].challenge_id}}" type="submit">Accept</button></td>
                             </div>
                             <div id="remove_buttons">
-                                <td scope="col"><button class="btn btn-outline-success my-2 my-sm-0" id = "remove-{{request["challenge"].challenge_id}}" type="submit">Cancel</button></td>
+                                <td scope="col"><button class="btn btn-secondary" id = "remove-{{request["challenge"].challenge_id}}" type="submit">Cancel</button></td>
                             </div>
                         </th>
                         {% endfor %}
@@ -77,7 +56,7 @@
                     {% else %}
                     <div id="partic_buttons">
                         <td>
-                            <button id = "participate-{{challenge.challenge_id}}" class ="Participation_button">Participate</button>
+                            <button id = "participate-{{challenge.challenge_id}}" class ="btn btn-secondary">Participate</button>
                         </td>
                     </div>
                     {% endif %}

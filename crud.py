@@ -279,6 +279,13 @@ def get_steps_by_date(user_id, date):
     return steps_by_date.daily_total
 
 
+def get_steps_by_user_id(user_id):
+    steps_by_user = Steps.query.filter(
+        Steps.user_id == user_id).first()
+
+    return steps_by_user
+
+
 def get_leader():
     """Return most active users."""
 

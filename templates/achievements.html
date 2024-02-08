@@ -4,20 +4,39 @@
     <div class="col-sm">
       <table class="table table-dark">
         <h1>Achievements List</h1>
-        <thead>
+
+        <div class="row row-cols-1 row-cols-md-4 g-4 shadow-lg">
+          <!-- <div class="col"> -->
           {% for row in achievements %}
+          <div class="card h-5 shadow-lg">
+            <img
+              src="{{ row.image }}"
+              class="card-img-top"
+              alt="epic pic"
+              style="margin-top: 13px"
+              id="ach_cards"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{row.title}}</h5>
+              <!-- <p class="card-text">{{row.title}}</p> -->
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- {% for row in achievements %}
           <tr>
             <th scope="col">
               <img src="{{ row.image }}" class="ach_img" />
             </th>
-          </tr>
-        </thead>
+          </tr> -->
+        <!-- </thead>
         <tbody>
           <tr>
             <td>{{row.title}}</td>
           </tr>
           {% endfor %}
-        </tbody>
+        </tbody> -->
       </table>
     </div>
   </div>

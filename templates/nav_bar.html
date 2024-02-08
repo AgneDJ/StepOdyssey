@@ -1,58 +1,70 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="/">Home</a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    action="/"
-    data-toggle="collapse"
-    data-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<div class="shadow-lg p-3 mb-5 bg-white rounded">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <img
+      src="/static/img/dalee_image.png"
+      class="rounded-circle shadow-4"
+      style="width: 40px"
+      position="absolute"
+      alt="Avatar"
+      align="right"
+    />
+    <a class="navbar-brand" style="margin-left: 15px" href="/">Step Odyssey</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      action="/"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div
-    class="collapse navbar-collapse"
-    id="navbarSupportedContent"
-    style="opacity: 70%"
-  >
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/profile"
-          >My profile <span class="sr-only"></span
-        ></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="/friends"
-          >Friends <span class="sr-only"></span
-        ></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/challenges">Challenges</a>
-      </li>
-      <li class="leaderboard">
-        <a class="nav-link" href="/leaderboard">Leaderboard</a>
-      </li>
-      <li class="achievements">
-        <a class="nav-link" href="/achievements">Achievements</a>
-      </li>
-      <li>
-        <p></p>
-      </li>
-      <li>
-        <p></p>
-      </li>
-    </ul>
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/contact">Contact Us</a>
-      </li>
-    </ul>
-    <div></div>
-    <ul class="navbar-nav mr-auto" style="margin-left: auto">
-      <li class="nav-item">{% include 'logout.html' %}</li>
-    </ul>
-  </div>
-</nav>
+    <div
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+      style="opacity: 70%"
+    >
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/profile"
+            >My Profile <span class="sr-only"></span
+          ></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/friends"
+            >Friends <span class="sr-only"></span
+          ></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/challenges">Challenges</a>
+        </li>
+        <li class="leaderboard">
+          <a class="nav-link" href="/leaderboard">Leaderboard</a>
+        </li>
+        <li class="achievements">
+          <a class="nav-link" href="/achievements">Achievements</a>
+        </li>
+        <li>
+          <p></p>
+        </li>
+        <li>
+          <p></p>
+        </li>
+      </ul>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact Us</a>
+        </li>
+      </ul>
+      <div></div>
+      <ul class="navbar-nav mr-auto" style="margin-left: auto">
+        <li class="nav-item" style="margin-right: 10px">
+          {% include 'logout.html' %}
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>

@@ -35,8 +35,8 @@ def get_google_provider_cfg():
 @app.route("/")
 def homepage():
     """View homepage."""
-    # if "user_email" in session:
-    #     return redirect("/homepage")
+    if "user_email" in session:
+        return redirect("/profile")
 
     return render_template("homepage.html")
 
@@ -317,9 +317,15 @@ def friends():
     friends = crud.get_friends(receiver)
     friends_list = crud.get_users_by_ids(friends)
 
+    friends_steps = {}
+    for friend in friends_list:
+        daily_total = crud.get_steps_by_date(
+            friend.user_id, datetime.now())
+        friends_steps[friend] = daily_total
+
     has_friend_requests = crud.is_there_friend_request(receiver=user.user_id)
 
-    return render_template("friends.html", has_friend_requests=has_friend_requests, user_list=user_list, friends_list=friends_list)
+    return render_template("friends.html", has_friend_requests=has_friend_requests, user_list=user_list, friends_list=friends_list, friends_steps=friends_steps)
 
 
 @app.route("/friends/request", methods=["POST"])
@@ -348,7 +354,7 @@ def friend_request():
 @app.route("/friends/invite", methods=["POST"])
 def friend_invite():
     if "user_email" not in session:
-        return redirect("/"), 401
+        return redirect("/"), 302
     user = crud.get_user_by_email(session["user_email"])
     # checking if user exists
     if not user:
@@ -367,7 +373,7 @@ def friend_invite():
 def delete_request():
     friend_id = request.get_json()["friend"]
     if "user_email" not in session:
-        return redirect("/"), 401
+        return redirect("/"), 302
     user = crud.get_user_by_email(session["user_email"])
     # checking if user exists
     if not user:
@@ -384,7 +390,7 @@ def add_friend():
 
     friend_id = request.get_json()["friend"]
     if "user_email" not in session:
-        return redirect("/"), 401
+        return redirect("/"), 302
     user = crud.get_user_by_email(session["user_email"])
     # checking if user exists
     if not user:
@@ -403,7 +409,7 @@ def add_friend():
 def remove_friend():
     new_friend = request.get_json()["friend"]
     if "user_email" not in session:
-        return redirect("/"), 401
+        return redirect("/"), 302
     user = crud.get_user_by_email(session["user_email"])
     # checking if user exists
     if not user:
@@ -419,7 +425,7 @@ def remove_friend():
 def challenges():
     """View challenges list."""
     if "user_email" not in session:
-        return redirect("/"), 401
+        return redirect('/'), 302
     email = session["user_email"]
     user = crud.get_user_by_email(email)
     if not user:
@@ -547,7 +553,7 @@ def cancel_invite():
 
     challenge_id = request.get_json()["id"]
     if "user_email" not in session:
-        return redirect("/"), 401
+        return redirect("/"), 302
     user = crud.get_user_by_email(session["user_email"])
     # checking if user exists
     if not user:
