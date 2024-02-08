@@ -1,23 +1,24 @@
 {% extends 'base.html' %} {% block content %}
-<div class="rounded-circle">
-  <div class="container-fluid" id="main_block">
-    <div class="container-fluid" id="avatar_block">
+
+<div class="container-fluid" id="avatar_block">
+    
       <div class="row">
         <div class="col-sm">
           <form>
             <label for="message_text"><h1>Contact us</h1></label><br />
             <input
-              type="text"
+              class="form-control mr-sm-2"
               id="message_text"
+              type="search"
               placeholder="Message"
-              class="table table-dark"
-              style="background-color: rgb(255, 255, 255)"
+              aria-label="Search"
             /><br />
             <input
               type="submit"
               value="Submit"
               id="submit"
               class="btn btn-secondary"
+              style="margin-bottom: 5px"
             />
           </form>
         </div>
