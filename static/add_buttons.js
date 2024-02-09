@@ -4,7 +4,7 @@ const acceptEvent = (e) => {
   let id = Number(e.target.id.replace("accept-", ""));
   console.log(id);
 
-  fetch("https://127.0.0.1:5000/friends/accepting", {
+  fetch("https://stepodyssey.com/friends/accepting", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

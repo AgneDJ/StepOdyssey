@@ -7,7 +7,7 @@ for (let button of invite_friend_to_challenge_buttons) {
       let id = Number(ids[1]);
       let challenge_id = Number(ids[2]);
 
-      fetch("https://127.0.0.1:5000/friends/invite", {
+      fetch("https://stepodyssey.com/friends/invite", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

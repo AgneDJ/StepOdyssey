@@ -5,7 +5,7 @@ const removeFriend = (e) => {
   console.log(id);
   console.log(e.target.id);
 
-  fetch("https://127.0.0.1:5000/friends/removing_friends", {
+  fetch("https://stepodyssey.com/friends/removing_friends", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

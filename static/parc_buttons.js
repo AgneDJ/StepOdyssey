@@ -2,7 +2,7 @@ const buttons = document.getElementsByTagName("button");
 
 const buttonPressed = (e) => {
   let id = Number(e.target.id.replace("participate-", ""));
-  fetch("https://127.0.0.1:5000/challenges", {
+  fetch("https://stepodyssey.com/challenges", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

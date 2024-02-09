@@ -5,7 +5,7 @@ const removeEvent = (e) => {
   console.log(id);
   console.log(e.target.id);
 
-  fetch("https://127.0.0.1:5000/friends/notadding", {
+  fetch("https://stepodyssey.com/friends/notadding", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

@@ -3,7 +3,7 @@ const button = document.getElementById("submit");
 
 button.addEventListener("click", (e) => {
   e.preventDefault();
-  fetch("https://127.0.0.1:5000/contact_mes", {
+  fetch("https://stepodyssey.com/contact_mes", {
     method: "POST",
     headers: {
       "Content-type": "application/json",

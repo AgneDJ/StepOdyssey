@@ -142,8 +142,8 @@ def rendering_profile():
     user_challenges.reverse()
 
     # achievement adding process
-    # lifetime_steps = crud.lifetime_steps(user.user_id)
-    lifetime_steps = 1000000
+    lifetime_steps = crud.lifetime_steps(user.user_id)
+    # lifetime_steps = 1000000
     all_achievements = crud.get_achievements()
     user_achievements = crud.get_user_achievements(user.user_id)
 
@@ -191,7 +191,7 @@ def login_google():
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=request.host_url + "login/oauth",
+        redirect_uri="https://stepodyssey.com/login/oauth",
         scope=["openid", "email", "https://www.googleapis.com/auth/userinfo.profile",
                "https://www.googleapis.com/auth/fitness.activity.read"],
         access_type="offline",
@@ -212,8 +212,8 @@ def login_oauth():
     # Prepare and send a request to get tokens! Yay tokens!
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
-        authorization_response=request.url,
-        redirect_url=request.base_url,
+        authorization_response=request.url.replace('http:', 'https:'),
+        redirect_url="https://stepodyssey.com/login/oauth",
         code=code
     )
     token_response = requests.post(
@@ -224,6 +224,8 @@ def login_oauth():
     )
     print("DATS DA TOUKEN:---------------------------------->")
     refresh_token = token_response.json()["refresh_token"]
+    if "refresh_token" in token_response.json():
+        refresh_token = token_response.json()["refresh_token"]
 
     client.parse_request_body_response(json.dumps(token_response.json()))
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
@@ -247,7 +249,8 @@ def login_oauth():
 
     session["user_email"] = user.user_email
 
-    user.refresh_token = refresh_token
+    if refresh_token:
+        user.refresh_token = refresh_token
     user.user_avatar = picture
     db.session.add(user)
     db.session.commit()
@@ -604,4 +607,4 @@ def update_steps(user_id):
 
 if __name__ == "__main__":
     connect_to_db(app)
-    app.run(host="0.0.0.0", debug=True, ssl_context="adhoc")
+    app.run(host="0.0.0.0")
