@@ -223,7 +223,7 @@ def login_oauth():
         auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
     )
     print("DATS DA TOUKEN:---------------------------------->")
-    refresh_token = token_response.json()["refresh_token"]
+    refresh_token = None
     if "refresh_token" in token_response.json():
         refresh_token = token_response.json()["refresh_token"]
 
