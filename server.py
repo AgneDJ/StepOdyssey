@@ -18,7 +18,6 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY", None)
 app.jinja_env.undefined = StrictUndefined
 
-# TODO: crash i
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 GOOGLE_DISCOVERY_URL = (
